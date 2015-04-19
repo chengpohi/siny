@@ -14,4 +14,8 @@ class FileUtilsTest extends FlatSpec {
     assert(FileUtils.getFile("/").exists)
     assert(FileUtils.getFile("/").getPath.endsWith("index.html"))
   }
+
+  "file util" should "get File failed" in {
+    assert(!FileUtils.getFile("/test").exists)
+  }
 }
