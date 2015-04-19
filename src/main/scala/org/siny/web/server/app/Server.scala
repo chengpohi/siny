@@ -1,4 +1,4 @@
-package org.siny.web.server
+package org.siny.web.server.app
 
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
@@ -9,18 +9,18 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory
 import org.jboss.netty.channel.{ChannelPipeline, ChannelPipelineFactory, Channels}
 import org.jboss.netty.handler.codec.http.{HttpChunkAggregator, HttpRequestDecoder, HttpResponseEncoder}
 import org.jboss.netty.handler.stream.ChunkedWriteHandler
+import org.siny.web.server.handler.HttpResponseServerHandler
 
 /**
  * Created by xiachen on 4/17/15.
  */
 object Server extends App {
-  val config = ConfigFactory.load()
+  lazy val config = ConfigFactory.load()
   val serverBootStrap = new ServerBootstrap(new NioServerSocketChannelFactory(
     Executors.newCachedThreadPool(),
     Executors.newCachedThreadPool()
   ))
 
-  // Set up the event pipeline factory.
   serverBootStrap.setPipelineFactory(new ChannelPipelineFactory() {
     override def getPipeline: ChannelPipeline = {
       val pipeline: ChannelPipeline = Channels.pipeline()
@@ -30,7 +30,7 @@ object Server extends App {
       pipeline.addLast("encoder", new HttpResponseEncoder())
       pipeline.addLast("chunkedWriter", new ChunkedWriteHandler())
 
-      pipeline.addLast("handler", new HttpChunkedServerHandler())
+      pipeline.addLast("handler", new HttpResponseServerHandler())
       pipeline
     }
   })
