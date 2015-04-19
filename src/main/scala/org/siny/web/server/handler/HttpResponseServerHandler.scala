@@ -56,7 +56,6 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
     response.setContent(ChannelBuffers.wrappedBuffer(data.getBytes))
     response.headers.add(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8")
     response.headers.add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE)
-    response.headers.add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE)
     response.headers.add(HttpHeaders.Names.CONTENT_LENGTH, response.getContent.readableBytes)
 
     channel.write(response)
