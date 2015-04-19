@@ -8,6 +8,10 @@
   "description": "siny",
   "main": "index.html",
   "license": "MIT",
+  "dependencies": {
+    "sass-bootstrap": "~3.0.0",
+    "angular": ""
+  },
   "ignore": [
     "**/.*",
     "node_modules",
