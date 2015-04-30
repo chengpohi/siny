@@ -19,3 +19,4 @@ project/plugins/project/
 www/public/bower_components
 www/public/node_modules
 www/public/js/app.js
+*~
