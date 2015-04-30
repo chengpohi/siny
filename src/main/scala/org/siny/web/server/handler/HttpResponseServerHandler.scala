@@ -25,7 +25,7 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
 
   @throws(classOf[Exception])
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent): Unit = {
-    println("Exception" + e.getCause)
+    println("Exception: " + e.getCause)
   }
 
 
