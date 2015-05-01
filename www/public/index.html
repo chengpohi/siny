@@ -1,14 +1,14 @@
 <html>
-<script src="./js/app.js"></script>
-<script src="./js/controller/sinyController.js"></script>
-<body ng-app="siny" ng-controller="sinyCtrl">
-<p>BookMark Name : <input type="text" ng-model="bookMarkName"></p>
-<p>BookMark Url : <input type="text" ng-model="bookMarkUrl"></p>
-<button ng-click='append(bookMarks, bookMarkName, bookMarkUrl)'>Append</button>
-<ul>
-   <li ng-repeat="bookMark in bookMarks">
-     <a href="{{ bookMark.url }}" target="_blank">{{ bookMark.name }}</a>
-  </li>
-</ul>
-</body>
+  <script src="./js/app.js"></script>
+  <script src="./js/controller/sinyController.js"></script>
+  <body ng-app="siny" ng-controller="sinyCtrl">
+    <p>BookMark Name : <input type="text" ng-model="bookMarkName"></p>
+    <p>BookMark Url : <input type="text" ng-model="bookMarkUrl"></p>
+    <button ng-click='append(bookMarks, bookMarkName, bookMarkUrl)'>Append</button>
+    <ul>
+      <li ng-repeat="bookMark in bookMarks">
+	<a href="{{ bookMark.url }}" target="_blank">{{ bookMark.name }}</a>
+      </li>
+    </ul>
+  </body>
 </html>
