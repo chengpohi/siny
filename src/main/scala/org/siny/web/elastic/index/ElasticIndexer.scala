@@ -19,6 +19,7 @@ object ElasticIndexer {
 
   def createUser(user: User): Unit = {
     val state = client execute {
+
       index into "siny" -> user.name doc StringDocumentSource(JSONObject(Map("marks", user.tabs)).toString())
     }
 
