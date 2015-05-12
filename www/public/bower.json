@@ -1,22 +1,23 @@
 {
-  "name": "siny",
-  "version": "0.0.0",
-  "homepage": "https://github.com/chengpohi/siny",
-  "authors": [
-    "xiachen <chengpohi@gmail.com>"
-  ],
-  "description": "siny",
-  "main": "index.html",
-  "license": "MIT",
-  "dependencies": {
-    "sass-bootstrap": "~3.0.0",
-    "angular": ""
-  },
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+    "name": "siny",
+    "version": "0.0.0",
+    "homepage": "https://github.com/chengpohi/siny",
+    "authors": [
+	"xiachen <chengpohi@gmail.com>"
+    ],
+    "description": "siny",
+    "main": "index.html",
+    "license": "MIT",
+    "dependencies": {
+	"angular": "",
+	"bootstrap-sass-official": "",
+	"jquery": ""
+    },
+    "ignore": [
+	"**/.*",
+	"node_modules",
+	"bower_components",
+	"test",
+	"tests"
+    ]
 }
