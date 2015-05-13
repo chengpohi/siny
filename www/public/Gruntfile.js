@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 		separator: ';',
             },
             dist: {
-		src: ['bower_components/angular/angular.js', 'bower_components/jquery/dist/jquery.js ', 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.min.js'],
+		src: ['bower_components/angular/angular.js', 'bower_components/jquery/dist/jquery.js ', 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.min.js', "bower_components/angular-local-storage/dist/angular-local-storage.js"],
 		dest: '<%= project.assets %>/js/app.js',
             },
 	},
