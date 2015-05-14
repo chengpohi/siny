@@ -21,23 +21,27 @@
 	  </form>
 	  <div class="bs-glyphicons">
 	    <ul class="bs-glyphicons-list">
-	      <li ng-repeat="bookMark in user.bookMarks"
-		  style="cursor: pointer;" >
-		<div>
-		  <div  style="display:block; z-index:1000; position: absolute;">
-		    <span class="glyphicon glyphicon-remove"
-			  aria-hidden="true"></span>
-		  </div>
-		  <div >
-		    {{ bookMark.name }}
-		  </div>
+	      <li ng-repeat="bookMark in user.bookMarks">
+		<div class="markItem">
+		  <a href="{{bookMark.url}}" target="_blank">
+		    <div class="markBlock">
+		      <div  style="height: 20%;">
+			<span class="glyphicon glyphicon-remove"
+			      aria-hidden="true"></span>
+		      </div>
+		      <div style="text-align:center;">
+			{{bookMark.name}}
+		      </div>
+		    </div>
+		  </a>
+		</div>
 	      </li>
 	    </ul>
-	    </div>
-	  </div>
-	  <div class="col-md-4 column">
 	  </div>
 	</div>
+	<div class="col-md-4 column">
+	</div>
       </div>
+    </div>
   </body>
 </html>

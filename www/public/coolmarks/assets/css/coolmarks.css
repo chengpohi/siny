@@ -1,43 +1,39 @@
 @media (min-width: 768px)
 .bs-glyphicons {
-  margin-right: 0;
-  margin-left: 0;
+    margin-right: 0;
+    margin-left: 0;
 }
 
 .bs-glyphicons {
-  margin: 0 -10px 20px;
-  overflow: hidden;
+    margin: 0 -10px 20px;
+    overflow: hidden;
 }
 
 .bs-glyphicons-list {
-  padding-left: 0;
-  list-style: none;
+    padding-left: 0;
+    list-style: none;
 }
 
-.bs-glyphicons li {
-  width: 12.5%;
-  font-size: 12px;
+.bs-glyphicons-list li{
+    float: left;
 }
 
-.bs-glyphicons li {
-  float: left;
-  width: 25%;
-  height: 200px;
-  padding: 10px;
-  font-size: 10px;
-  line-height: 1.4;
-  text-align: center;
-  background-color: #f9f9f9;
-  border: 15px solid #fff;
+.markItem{
+    width: 200px; 
+    height: 200px;
+    background-color: #f9f9f9;
+    border: 15px solid #fff;
+}
+.markItem div{
+    width: 100%;
+    height: 100%;
+}
+.markItem .glyphicon{
+    float: right;
+    padding: 10px;
+    font-size: 20px;
 }
 
-.bs-glyphicons li:hover{
+.markBlock:hover{
     background-color: #6f5499;
-}
-
-.bs-glyphicons .glyphicon {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  left: 130px;
-  font-size: 24px;
 }
