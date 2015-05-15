@@ -20,6 +20,10 @@ siny.controller('sinyCtrl', function($scope, localStorageService) {
 	localStorageService.set("chengpohi", user);
     };
     
+    $scope.removeMarkItem = function(user, index) {
+	user.bookMarks.splice(index, 1);
+	localStorageService.set("chengpohi", user);
+    }
     function getItem(key) {
 	return localStorageService.get(key);
     }

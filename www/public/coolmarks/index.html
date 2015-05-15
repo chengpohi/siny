@@ -23,17 +23,16 @@
 	    <ul class="bs-glyphicons-list">
 	      <li ng-repeat="bookMark in user.bookMarks">
 		<div class="markItem">
+		    <span class="glyphicon glyphicon-remove" ng-hide="false"
+			  aria-hidden="true"
+			  ng-click="removeMarkItem(user, $index)"></span>
 		  <a href="{{bookMark.url}}" target="_blank">
 		    <div class="markBlock">
-		      <div  style="height: 20%;">
-			<span class="glyphicon glyphicon-remove"
-			      aria-hidden="true"></span>
-		      </div>
 		      <div style="text-align:center;">
 			{{bookMark.name}}
 		      </div>
 		    </div>
-		  </a>
+		  </a>	
 		</div>
 	      </li>
 	    </ul>
