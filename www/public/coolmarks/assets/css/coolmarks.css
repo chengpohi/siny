@@ -19,21 +19,52 @@
 }
 
 .markItem{
+    border-radius: 20%;
     width: 200px; 
     height: 200px;
-    background-color: #f9f9f9;
+    color: darkslategrey; 
     border: 15px solid #fff;
+    background-image: -webkit-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
+    background-image: -moz-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
+    background-image: -ms-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
+    background-image: -o-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
+    background-image: linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
 }
 .markItem div{
     width: 100%;
-    height: 100%;
 }
 .markItem .glyphicon{
     float: right;
-    padding: 10px;
-    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 10px 30px 10px 0;
 }
 
 .markBlock:hover{
+    transition: background-color 0.2s ease;
+    border-radius: 15%;
     background-color: #6f5499;
+}
+
+.markInfo {
+    padding: 5px;
+    text-align:center; 
+    height: 30%;
+    font-size: 20px;
+}
+
+.markItem a {
+    text-decoration: none;
+}
+
+.markBlock hr {
+    margin-top: 0px; 
+    margin-bottom: 0px; 
+}
+.markUrl {
+    text-align: center;
+    padding-top: 50px;
+    height: 70%;
+    font-size: 15px;
 }

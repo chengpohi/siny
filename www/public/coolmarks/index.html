@@ -3,6 +3,7 @@
   <script src="./assets/js/controller/siny_controller.js"></script>
   <link rel=stylesheet type=text/css href="./assets/css/style.css">
   <link rel=stylesheet type=text/css href="./assets/css/coolmarks.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <body ng-app="siny" ng-controller="sinyCtrl">
     <div class="container">
       <div class="role">
@@ -23,12 +24,14 @@
 	    <ul class="bs-glyphicons-list">
 	      <li ng-repeat="bookMark in user.bookMarks">
 		<div class="markItem">
-		    <span class="glyphicon glyphicon-remove" ng-hide="false"
-			  aria-hidden="true"
-			  ng-click="removeMarkItem(user, $index)"></span>
+		  <i class="glyphicon fa fa-trash fa-2x" ng-click="removeMarkItem(user, $index)"></i>
 		  <a href="{{bookMark.url}}" target="_blank">
 		    <div class="markBlock">
-		      <div style="text-align:center;">
+		      <div class="markUrl">
+			{{bookMark.url}}
+		      </div>
+		      <hr />
+		      <div class="markInfo">
 			{{bookMark.name}}
 		      </div>
 		    </div>
