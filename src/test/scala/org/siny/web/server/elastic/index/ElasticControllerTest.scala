@@ -32,7 +32,7 @@ class ElasticControllerTest extends FlatSpec{
 
   "ElasticController" should "delete bookMark by id" in {
     val id = ElasticController.getBookMarksWithObject(user)(0).getId
-    ElasticController.deleteBookMarkById(id, user)
+    //ElasticController.deleteBookMarkById(id, user)
   }
 
 }

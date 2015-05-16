@@ -9,17 +9,22 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.handler.codec.http._
 import org.jboss.netty.handler.stream.ChunkedFile
+import org.siny.web.elastic.index.ElasticController
+import org.siny.web.model.User
 import org.siny.web.server.file.FileUtils._
+import org.slf4j.LoggerFactory
 
 
 /**
  * Created by xiachen on 4/18/15.
  */
 class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
+  lazy val LOG = LoggerFactory.getLogger(getClass.getName)
+
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = {
     val httpRequest = e.getMessage.asInstanceOf[HttpRequest]
     val uri = httpRequest.getUri
-    println("VISIT URL: " + uri)
+    LOG.info("VISIT URL: " + uri)
     sendPrepare(ctx, uri)
   }
 
@@ -34,13 +39,19 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   def sendPrepare(ctx: ChannelHandlerContext, uri: String): Unit = {
-    uri.startsWith("http") match {
-      case true => writeUrl(ctx.getChannel, uri)
-      case false =>
-        val file = getFile(uri)
-        file.exists match {
-          case true => writeFile(ctx.getChannel, file, OK)
-          case false => writeBuffer(ctx.getChannel, (uri + ":" + " 404 Not Found").getBytes, NOT_FOUND)
+    val uriParts = uri.split("/")
+    uriParts match {
+      case u: Array[String] if u.length > 1 && u(1) == "user" =>
+        writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(User("chengpohi")).getBytes, OK)
+      case _ =>
+        uri.startsWith("http") match {
+          case true => writeUrl(ctx.getChannel, uri)
+          case false =>
+            val file = getFile(uri)
+            file.exists match {
+              case true => writeFile(ctx.getChannel, file, OK)
+              case false => writeBuffer(ctx.getChannel, (uri + ":" + " 404 Not Found").getBytes, NOT_FOUND)
+            }
         }
     }
   }

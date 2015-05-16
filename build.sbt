@@ -12,7 +12,8 @@ ivyScala := ivyScala.value map {
 
 libraryDependencies ++= {
   Seq(
-    "io.netty" % "netty" % "3.10.1.Final",
+    "io.netty" % "netty" % "3.8.0.Final",
+    "org.slf4j" % "slf4j-simple" % "1.7.7",
     "com.typesafe.akka" %% "akka-actor" % "2.3.8",
     "com.typesafe.akka" %% "akka-testkit" % "2.3.8",
     "com.typesafe.akka" %% "akka-remote" % "2.3.8",
