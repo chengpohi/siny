@@ -5,18 +5,20 @@ import java.net.URL
 
 import org.jboss.netty.buffer.ChannelBuffers
 import org.jboss.netty.channel._
+import org.jboss.netty.handler.codec.http.HttpMethod._
 import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.handler.codec.http._
+import org.jboss.netty.handler.codec.http.multipart.{Attribute, DefaultHttpDataFactory, HttpPostRequestDecoder}
 import org.jboss.netty.handler.stream.ChunkedFile
 import org.siny.web.elastic.index.ElasticController
-import org.siny.web.model.User
+import org.siny.web.model.{BookMark, User}
 import org.siny.web.server.file.FileUtils._
 import org.slf4j.LoggerFactory
 
 
 /**
- * Created by xiachen on 4/18/15.
+ * Created by chengpohi on 4/18/15.
  */
 class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
@@ -25,7 +27,22 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
     val httpRequest = e.getMessage.asInstanceOf[HttpRequest]
     val uri = httpRequest.getUri
     LOG.info("VISIT URL: " + uri)
-    sendPrepare(ctx, uri)
+
+    httpRequest.getMethod match {
+      case GET => sendPrepare(ctx, uri)
+      case PUT => sendPrepare(ctx, uri)
+      case DELETE => sendPrepare(ctx, uri)
+      case POST => dealPostData(ctx, httpRequest)
+    }
+  }
+
+  def dealPostData(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), httpRequest)
+    val name = decoder.getBodyHttpData("name").asInstanceOf[Attribute].getValue
+    val url = decoder.getBodyHttpData("url").asInstanceOf[Attribute].getValue
+
+    ElasticController.create(User("chengpohi"), BookMark("", name, url))
+    writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
   }
 
   @throws(classOf[Exception])
@@ -89,4 +106,5 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
 
     channel.write(response)
   }
+
 }

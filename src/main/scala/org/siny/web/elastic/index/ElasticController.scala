@@ -2,26 +2,26 @@ package org.siny.web.elastic.index
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.source.JsonDocumentSource
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.web.elastic.ElasticClientConnector
-import org.siny.web.model.User
+import org.siny.web.model.{BookMark, User}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
 import scala.util.parsing.json.JSONObject
 
 /**
- * Created by xiachen on 3/1/15.
+ * BookMark model
+ * Created by chengpohi on 3/1/15.
  */
 object ElasticController {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
   lazy val client = ElasticClientConnector.client
 
-  def create(user: User): Unit = {
+  def create(user: User, bookMark: BookMark): Unit = {
     client.execute {
-      index into user.name / "bookMarks" doc JsonDocumentSource("{\"name\": \"jack\", \"url\": \"http://www.baidu.com\"}")
+      index into user.name / "bookMarks" doc bookMark
     }.await
   }
 
@@ -55,9 +55,9 @@ object ElasticController {
     }
   }
 
-  def updateBookMarkById(_id: String, user: User): Unit = {
+  def updateBookMarkById(user: User, bookMark: BookMark): Unit = {
     client execute {
-      update id _id in user.name + "/bookMarks" doc JsonDocumentSource("{\"name\": \"rose\", \"url\": \"http://www.baidu.com\"}")
+      update id bookMark.id in user.name + "/bookMarks" doc bookMark.map
     }
   }
 

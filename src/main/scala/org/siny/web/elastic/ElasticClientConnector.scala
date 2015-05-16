@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import org.elasticsearch.common.settings.ImmutableSettings
 
 /**
- * Created by xiachen on 3/19/15.
+ * Created by chengpohi on 3/19/15.
  */
 object ElasticClientConnector {
   lazy val indexConfig = ConfigFactory.load("application.conf").getConfig("elastic")

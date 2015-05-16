@@ -6,7 +6,7 @@ import org.siny.web.elastic.ElasticClientConnector
 
 
 /**
- * Created by xiachen on 3/19/15.
+ * Created by chengpohi on 3/19/15.
  */
 object ElasticSearchClient {
   lazy val client = ElasticClientConnector.client
