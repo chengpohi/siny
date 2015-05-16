@@ -1,6 +1,5 @@
 package org.siny.web.elastic.search
 
-import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.SearchHit
 import org.siny.web.elastic.ElasticClientConnector
@@ -19,26 +18,9 @@ object ElasticSearchClient {
     new java.math.BigInteger(1, m.digest()).toString(16)
   }
 
-  def searchCall(indexName: String, indexType: String, field: String, key: String): SearchResponse =
-    client.execute { search in indexName -> indexType query s"$field:$key" }.await
+  def searchCall(indexName: String, indexType: String, field: String, key: String): SearchResponse = ???
 
-  def comparePage(indexName: String, indexType: String, html: String, url: String): SearchResponse =
-    client.execute {
-      search in indexName -> indexType query {
-        bool {
-          must (
-            termQuery("_md5", hash(html)),
-            termQuery("_urlMd5", hash(url))
-          )
-        }
-      }
-    }.await
+  def comparePage(indexName: String, indexType: String, html: String, url: String): SearchResponse = ???
 
-  def searchUrl(indexName: String, indexType: String, key: String): SearchHit = {
-    val hits = searchCall(indexName, indexType, "_urlMd5", hash(key)).getHits
-    hits.getTotalHits match {
-      case x: Long if x > 0 => hits.getAt(0)
-      case _ => null
-    }
-  }
+  def searchUrl(indexName: String, indexType: String, key: String): SearchHit = ???
 }

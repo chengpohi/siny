@@ -16,6 +16,7 @@
 
 .bs-glyphicons-list li{
     float: left;
+    border: 15px solid transparent;
 }
 
 .markItem{
@@ -23,7 +24,6 @@
     width: 200px; 
     height: 200px;
     color: darkslategrey; 
-    border: 15px solid #fff;
     background-image: -webkit-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
     background-image: -moz-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
     background-image: -ms-linear-gradient(top, #FF5A00 0%, #FFAE00 100%);
@@ -38,12 +38,12 @@
     width: 30px;
     height: 30px;
     text-align: center;
-    padding: 10px 30px 10px 0;
+    padding: 10px 45px 10px 0;
 }
 
 .markBlock:hover{
     transition: background-color 0.2s ease;
-    border-radius: 15%;
+    border-radius: 20%;
     background-color: #6f5499;
 }
 
@@ -67,4 +67,8 @@
     padding-top: 50px;
     height: 70%;
     font-size: 15px;
+}
+
+body {
+    background-image: url(/assets/img/background.png);
 }

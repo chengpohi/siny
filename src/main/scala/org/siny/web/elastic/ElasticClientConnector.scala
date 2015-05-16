@@ -10,7 +10,7 @@ import org.elasticsearch.common.settings.ImmutableSettings
  * Created by xiachen on 3/19/15.
  */
 object ElasticClientConnector {
-  lazy val indexConfig = ConfigFactory.load("indexer.conf").getConfig("index")
+  lazy val indexConfig = ConfigFactory.load("application.conf").getConfig("elastic")
   lazy val settings = ImmutableSettings.settingsBuilder().put("cluster.name", indexConfig.getString("cluster.name")).build()
   lazy val client = ElasticClient.remote(settings, (indexConfig.getString("host"), indexConfig.getInt("port")))
 }
