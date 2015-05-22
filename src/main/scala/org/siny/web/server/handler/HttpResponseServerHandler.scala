@@ -35,8 +35,8 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
     LOG.info("VISIT URL: " + uri + " Method:" + httpRequest.getMethod)
 
     httpRequest.getMethod match {
-      case GET => sendPrepare(ctx, uri)
-      case PUT => sendPrepare(ctx, uri)
+      case GET => getListener(ctx, uri)
+      case PUT => getListener(ctx, uri)
       case DELETE => deleteListener(ctx, httpRequest)
       case POST => postListener(ctx, httpRequest)
     }
@@ -48,9 +48,9 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
     uriParts match {
       case u: Array[String] if u.length == 3 && u(1) == "bookMarks" =>
         ElasticController.deleteBookMarkById(u(2), user)
-        writeBuffer(ctx.getChannel, ("Delete Ok, Id: " + u(2)).getBytes, OK)
+        writeBuffer(ctx.getChannel, ("Delete BookMark Ok, Id: " + u(2)).getBytes, OK)
       case _ =>
-        writeBuffer(ctx.getChannel, "UNKNOWN DATA".getBytes, BAD_REQUEST)
+        writeBuffer(ctx.getChannel, "UNKNOWN URL VISIT".getBytes, BAD_REQUEST)
     }
   }
 
@@ -74,7 +74,7 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
     super.channelDisconnected(ctx, e)
   }
 
-  def sendPrepare(ctx: ChannelHandlerContext, uri: String): Unit = {
+  def getListener(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
     uriParts match {
       case u: Array[String] if u.length > 1 && u(1) == "bookMarks" =>
