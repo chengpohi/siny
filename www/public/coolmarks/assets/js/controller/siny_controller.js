@@ -13,7 +13,7 @@ siny.controller('sinyCtrl', function($scope, $http, localStorageService) {
     
     $scope.user = { bookMarks: [] };
 
-    $http.get("/user/chengpohi").success(function(data, status, headers, config) {
+    $http.get("/bookMarks").success(function(data, status, headers, config) {
 	$scope.user.bookMarks = data
 	localStorageService.set("chengpohi", $scope.user);
     }).error(function(data, status, headers, config) {
@@ -22,16 +22,35 @@ siny.controller('sinyCtrl', function($scope, $http, localStorageService) {
 
     $scope.append = function (user, bookMarkName, bookMarkUrl) {
 	user.bookMarks.push({'url': bookMarkUrl, 'name': bookMarkName});
+	postBookMark(bookMarkName, bookMarkUrl);
+
 	$scope.bookMarkName = '';
 	$scope.bookMarkUrl = '';
-	localStorageService.set("chengpohi", user);
     };
     
     $scope.removeMarkItem = function(user, index) {
+	var bookMarkId = user.bookMarks[index].id;
 	user.bookMarks.splice(index, 1);
-	localStorageService.set("chengpohi", user);
+	deleteBookMark(bookMarkId);
     }
+
     function getItem(key) {
 	return localStorageService.get(key);
+    }
+
+    function postBookMark(bookMarkName, bookMarkUrl) {
+	$http.post('/bookMarks', {'name': bookMarkName, 'url': bookMarkUrl}).
+	    success(function(data, status, headers, config) {
+	    }).
+	    error(function(data, status, headers, config) {
+	    });
+    }
+    
+    function deleteBookMark(bookMarkId) {
+	$http.delete('/bookMarks/' + bookMarkId).
+	    success(function(data, status, headers, config) {
+	    }).
+	    error(function(data, status, headers, config) {
+	    });
     }
 });

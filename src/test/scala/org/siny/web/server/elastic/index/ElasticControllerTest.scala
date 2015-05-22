@@ -8,9 +8,9 @@ import org.siny.web.model.{BookMark, User}
  * BookMark model
  * Created by xiachen on 5/16/15.
  */
-class ElasticControllerTest extends FlatSpec{
+class ElasticControllerTest extends FlatSpec {
   val user = User("chengpohi")
-  val bookMark = BookMark("", "jack", "http://www.baidu.com")
+  val bookMark = BookMark(Option(""), "jack", "http://www.baidu.com")
   "ElasticController " should " index user data" in {
     //ElasticController.create(null)
     ElasticController.getBookMarksWithJson(user) match {
@@ -28,7 +28,7 @@ class ElasticControllerTest extends FlatSpec{
   "ElasticController" should "update bookMark by id" in {
     Thread.sleep(1000)
     val id = ElasticController.getBookMarksWithObject(user)(0).getId
-    ElasticController.updateBookMarkById(user, BookMark(id, "rose", "http://www.google.com"))
+    ElasticController.updateBookMarkById(user, BookMark(Option(id), "rose", "http://www.google.com"))
   }
 
   "ElasticController" should "delete bookMark by id" in {

@@ -57,7 +57,7 @@ object ElasticController {
 
   def updateBookMarkById(user: User, bookMark: BookMark): Unit = {
     client execute {
-      update id bookMark.id in user.name + "/bookMarks" doc bookMark.map
+      update id bookMark.id.get in user.name + "/bookMarks" doc bookMark.map
     }
   }
 

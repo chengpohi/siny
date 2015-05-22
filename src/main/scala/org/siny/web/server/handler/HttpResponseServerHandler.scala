@@ -3,18 +3,22 @@ package org.siny.web.server.handler
 import java.io.{File, RandomAccessFile}
 import java.net.URL
 
+import org.elasticsearch.common.netty.util.CharsetUtil
 import org.jboss.netty.buffer.ChannelBuffers
 import org.jboss.netty.channel._
 import org.jboss.netty.handler.codec.http.HttpMethod._
 import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.handler.codec.http._
-import org.jboss.netty.handler.codec.http.multipart.{Attribute, DefaultHttpDataFactory, HttpPostRequestDecoder}
 import org.jboss.netty.handler.stream.ChunkedFile
 import org.siny.web.elastic.index.ElasticController
 import org.siny.web.model.{BookMark, User}
 import org.siny.web.server.file.FileUtils._
 import org.slf4j.LoggerFactory
+
+import org.json4s.jackson.JsonMethods._
+import org.json4s._
+
 
 
 /**
@@ -22,32 +26,47 @@ import org.slf4j.LoggerFactory
  */
 class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
+  implicit val formats = DefaultFormats
+  val user = User("chengpohi")
 
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = {
     val httpRequest = e.getMessage.asInstanceOf[HttpRequest]
     val uri = httpRequest.getUri
-    LOG.info("VISIT URL: " + uri)
+    LOG.info("VISIT URL: " + uri + " Method:" + httpRequest.getMethod)
 
     httpRequest.getMethod match {
       case GET => sendPrepare(ctx, uri)
       case PUT => sendPrepare(ctx, uri)
-      case DELETE => sendPrepare(ctx, uri)
-      case POST => dealPostData(ctx, httpRequest)
+      case DELETE => deleteListener(ctx, httpRequest)
+      case POST => postListener(ctx, httpRequest)
     }
   }
 
-  def dealPostData(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
-    val decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), httpRequest)
-    val name = decoder.getBodyHttpData("name").asInstanceOf[Attribute].getValue
-    val url = decoder.getBodyHttpData("url").asInstanceOf[Attribute].getValue
 
-    ElasticController.create(User("chengpohi"), BookMark("", name, url))
+  def deleteListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val uriParts = httpRequest.getUri.split("/")
+    uriParts match {
+      case u: Array[String] if u.length == 3 && u(1) == "bookMarks" =>
+        ElasticController.deleteBookMarkById(u(2), user)
+        writeBuffer(ctx.getChannel, ("Delete Ok, Id: " + u(2)).getBytes, OK)
+      case _ =>
+        writeBuffer(ctx.getChannel, "UNKNOWN DATA".getBytes, BAD_REQUEST)
+    }
+  }
+
+  def postListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val rawBookMark = httpRequest.getContent.toString(CharsetUtil.UTF_8)
+
+    val bookMark = parse(rawBookMark).extract[BookMark]
+
+    ElasticController.create(user, bookMark)
     writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
   }
 
   @throws(classOf[Exception])
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent): Unit = {
-    println("Exception: " + e.getCause)
+    writeBuffer(ctx.getChannel, "Exception Has Occurred".getBytes, BAD_REQUEST)
+    LOG.warn("Exception: " + e.getCause.getLocalizedMessage)
   }
 
 
@@ -58,8 +77,8 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   def sendPrepare(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
     uriParts match {
-      case u: Array[String] if u.length > 1 && u(1) == "user" =>
-        writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(User("chengpohi")).getBytes, OK)
+      case u: Array[String] if u.length > 1 && u(1) == "bookMarks" =>
+        writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(user).getBytes, OK)
       case _ =>
         uri.startsWith("http") match {
           case true => writeUrl(ctx.getChannel, uri)
