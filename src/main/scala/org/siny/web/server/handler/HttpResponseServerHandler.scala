@@ -125,5 +125,4 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
 
     channel.write(response)
   }
-
 }
