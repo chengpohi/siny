@@ -72,3 +72,7 @@
 body {
     background-image: url(/assets/img/background.png);
 }
+
+.container {
+    padding: 20px;
+}
