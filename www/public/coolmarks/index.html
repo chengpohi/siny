@@ -28,7 +28,7 @@
 		  <a href="{{bookMark.url}}" target="_blank">
 		    <div class="markBlock">
 		      <div class="markUrl">
-			{{bookMark.url}}
+			{{bookMark.url  | limitTo:  25}}
 		      </div>
 		      <hr />
 		      <div class="markInfo">
