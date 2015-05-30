@@ -28,7 +28,7 @@ object ElasticController {
   def getBookMarksWithJson(user: User): String = {
     try {
       val resp = client.execute {
-        search in user.name / "bookMarks" query "*"
+        search in user.name / "bookMarks" query "*" start 0 limit Integer.MAX_VALUE
       }.await
       resp.getHits.getHits
     } catch {
