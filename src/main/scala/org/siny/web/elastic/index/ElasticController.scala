@@ -2,6 +2,8 @@ package org.siny.web.elastic.index
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
+
+import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.web.elastic.ElasticClientConnector
@@ -28,11 +30,16 @@ object ElasticController {
   def getBookMarksWithJson(user: User): String = {
     try {
       val resp = client.execute {
-        search in user.name / "bookMarks" query "*" start 0 limit Integer.MAX_VALUE
+        search in user.name / "bookMarks" query "*" start 0 limit Integer.MAX_VALUE sort (
+            by field "created_at" ignoreUnmapped true order ASC
+          )
       }.await
       resp.getHits.getHits
     } catch {
-      case ime: RemoteTransportException => null
+      case ime: RemoteTransportException => {
+        ime.printStackTrace()
+        null
+      }
       case e: Exception => throw e
     }
   }
