@@ -8,9 +8,10 @@
     <div class="container">
       <div class="role">
 	<div class="col-md-9" role="main">
+	  <input ng-model="searchBookMark" type="text"  class="form-control"> </input>
 	  <div class="bs-glyphicons">
 	    <ul class="bs-glyphicons-list">
-	      <li ng-repeat="bookMark in user.bookMarks">
+	      <li ng-repeat="bookMark in user.bookMarks | filter:searchBookMark">
 		<div class="markItem">
 		  <i class="glyphicon fa fa-trash fa-2x" ng-click="removeMarkItem(user, $index)"></i>
 		  <a href="{{bookMark.url}}" target="_blank">
