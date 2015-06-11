@@ -1,8 +1,8 @@
 package org.siny.web.server.elastic.index
 
 import org.scalatest.FlatSpec
-import org.siny.web.elastic.index.ElasticController
-import org.siny.web.model.{BookMark, User}
+import org.siny.elastic.index.ElasticController
+import org.siny.model.{BookMark, User}
 
 /**
  * BookMark model

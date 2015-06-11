@@ -1,8 +1,8 @@
-package org.siny.web.elastic.search
+package org.siny.elastic.search
 
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.SearchHit
-import org.siny.web.elastic.ElasticClientConnector
+import org.siny.elastic.ElasticClientConnector
 
 
 /**

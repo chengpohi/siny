@@ -11,9 +11,9 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.handler.codec.http._
 import org.jboss.netty.handler.stream.ChunkedFile
-import org.siny.web.elastic.index.ElasticController
-import org.siny.web.model.{BookMark, User}
-import org.siny.web.server.file.FileUtils._
+import org.siny.elastic.index.ElasticController
+import org.siny.model.{BookMark, User}
+import org.siny.file.FileUtils._
 import org.slf4j.LoggerFactory
 
 import org.json4s.jackson.JsonMethods._
@@ -24,7 +24,7 @@ import org.json4s._
 /**
  * Created by chengpohi on 4/18/15.
  */
-class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
+class HttpResponseSinyServerHandler extends SimpleChannelUpstreamHandler {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
   implicit val formats = DefaultFormats
   val user = User("chengpohi")

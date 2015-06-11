@@ -1,4 +1,4 @@
-package org.siny.web.model
+package org.siny.model
 
 /**
  * Created by xiachen on 5/1/15.

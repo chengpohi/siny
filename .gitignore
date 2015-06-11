@@ -21,3 +21,5 @@ www/public/node_modules
 www/public/js/app.js
 *~
 www/public/.sass-cache/
+project/target/*
+lib/*

@@ -1,4 +1,4 @@
-package org.siny.web.server.file
+package org.siny.file
 
 import java.io.File
 import java.nio.file.Paths

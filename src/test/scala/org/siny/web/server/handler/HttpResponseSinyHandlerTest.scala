@@ -20,7 +20,7 @@ import org.scalatest.FlatSpec
 /**
  * Created by xiachen on 4/19/15.
  */
-class HttpResponseServerHandlerTest extends FlatSpec {
+class HttpResponseSinyHandlerTest extends FlatSpec {
   val RESPONSE_TIMEOUT = 10000L
   val CONNECTION_TIMEOUT = 10000L
   val CONTENT_TYPE_TEXT = "text/plain charset=UTF-8"

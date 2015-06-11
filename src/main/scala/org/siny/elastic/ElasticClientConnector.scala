@@ -1,4 +1,4 @@
-package org.siny.web.elastic
+package org.siny.elastic
 
 import com.sksamuel.elastic4s.ElasticClient
 

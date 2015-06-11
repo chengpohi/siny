@@ -1,4 +1,4 @@
-package org.siny.web.model
+package org.siny.model
 
 /**
  * BookMark model

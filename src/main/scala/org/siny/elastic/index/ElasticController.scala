@@ -1,4 +1,4 @@
-package org.siny.web.elastic.index
+package org.siny.elastic.index
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
@@ -6,8 +6,8 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.transport.RemoteTransportException
-import org.siny.web.elastic.ElasticClientConnector
-import org.siny.web.model.{BookMark, User}
+import org.siny.elastic.ElasticClientConnector
+import org.siny.model.{BookMark, User}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
