@@ -21,16 +21,18 @@ object ElasticController {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
   lazy val client = ElasticClientConnector.client
 
+  val BOOKMARK_TYPE: String = "bookmark"
+
   def create(user: User, bookMark: BookMark): Unit = {
     client.execute {
-      index into user.name / "bookMarks" doc bookMark
+      index into user.name / BOOKMARK_TYPE doc bookMark
     }.await
   }
 
   def getBookMarksWithJson(user: User): String = {
     try {
       val resp = client.execute {
-        search in user.name / "bookMarks" query "*" start 0 limit Integer.MAX_VALUE sort (
+        search in user.name / BOOKMARK_TYPE query "*" start 0 limit Integer.MAX_VALUE sort (
             by field "created_at" ignoreUnmapped true order ASC
           )
       }.await
@@ -47,7 +49,7 @@ object ElasticController {
   def getBookMarksWithObject(user: User): Array[SearchHit]= {
     try {
       val resp = client.execute {
-        search in user.name / "bookMarks" query "*"
+        search in user.name / BOOKMARK_TYPE query "*"
       }.await
       resp.getHits.getHits
     } catch {
@@ -58,13 +60,13 @@ object ElasticController {
 
   def deleteBookMarkById(_id: String, user: User): Unit = {
     client execute {
-      delete id _id from user.name + "/bookMarks"
+      delete id _id from user.name + "/" + BOOKMARK_TYPE
     }
   }
 
   def updateBookMarkById(user: User, bookMark: BookMark): Unit = {
     client execute {
-      update id bookMark.id.get in user.name + "/bookMarks" doc bookMark.map
+      update id bookMark.id.get in user.name + "/" + BOOKMARK_TYPE doc bookMark.map
     }
   }
 

@@ -46,7 +46,7 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   def deleteListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val uriParts = httpRequest.getUri.split("/")
     uriParts match {
-      case u: Array[String] if u.length == 3 && u(1) == "bookMarks" =>
+      case u: Array[String] if u.length == 3 && u(1) == ElasticController.BOOKMARK_TYPE =>
         ElasticController.deleteBookMarkById(u(2), user)
         writeBuffer(ctx.getChannel, ("Delete BookMark Ok, Id: " + u(2)).getBytes, OK)
       case _ =>
@@ -77,7 +77,7 @@ class HttpResponseServerHandler extends SimpleChannelUpstreamHandler {
   def getListener(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
     uriParts match {
-      case u: Array[String] if u.length > 1 && u(1) == "bookMarks" =>
+      case u: Array[String] if u.length > 1 && u(1) == ElasticController.BOOKMARK_TYPE =>
         writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(user).getBytes, OK)
       case _ =>
         uri.startsWith("http") match {

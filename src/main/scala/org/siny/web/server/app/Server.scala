@@ -10,12 +10,14 @@ import org.jboss.netty.channel.{ChannelPipeline, ChannelPipelineFactory, Channel
 import org.jboss.netty.handler.codec.http.{HttpChunkAggregator, HttpRequestDecoder, HttpResponseEncoder}
 import org.jboss.netty.handler.stream.ChunkedWriteHandler
 import org.siny.web.server.handler.HttpResponseServerHandler
+import org.slf4j.LoggerFactory
 
 /**
  * Created by xiachen on 4/17/15.
  */
 object Server extends App {
   lazy val config = ConfigFactory.load()
+  lazy val LOG = LoggerFactory.getLogger(getClass.getName)
   val serverBootStrap = new ServerBootstrap(new NioServerSocketChannelFactory(
     Executors.newCachedThreadPool(),
     Executors.newCachedThreadPool()
@@ -41,5 +43,6 @@ object Server extends App {
 
   // Bind and start to accept incoming connections.
   serverBootStrap.bind(new InetSocketAddress(config.getInt("http.port")))
+  LOG.info("Server Started, IP: " + config.getString("http.interface")  + ", Port: " + config.getInt("http.port"))
 }
 
