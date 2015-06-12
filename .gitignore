@@ -23,3 +23,4 @@ www/public/js/app.js
 www/public/.sass-cache/
 project/target/*
 lib/*
+release/*
