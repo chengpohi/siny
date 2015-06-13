@@ -3,7 +3,10 @@ package org.siny.web.server
 import java.io.{File, RandomAccessFile}
 import java.net.URL
 
+import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
+
+import org.slf4j.LoggerFactory
 
 import org.siny.elastic.index.ElasticController
 import org.siny.model.{BookMark, User}
@@ -19,12 +22,16 @@ import org.jboss.netty.handler.stream.ChunkedFile
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 
 import org.elasticsearch.common.netty.util.CharsetUtil
+
 /**
  * BookMark model
  * Created by chengpohi on 6/12/15.
  */
 class SinyServerListener {
   val user = User("chengpohi")
+  lazy val LOG = LoggerFactory.getLogger(getClass.getName)
+  implicit val formats = DefaultFormats
+
   def deleteListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val uriParts = httpRequest.getUri.split("/")
     uriParts match {
@@ -45,16 +52,7 @@ class SinyServerListener {
     writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
   }
 
-  @throws(classOf[Exception])
-  override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent): Unit = {
-    writeBuffer(ctx.getChannel, "Exception Has Occurred".getBytes, BAD_REQUEST)
-    LOG.warn("Exception: " + e.getCause.getLocalizedMessage)
-  }
 
-
-  override def channelDisconnected(ctx: ChannelHandlerContext, e: ChannelStateEvent) = {
-    super.channelDisconnected(ctx, e)
-  }
 
   def getListener(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
@@ -63,7 +61,7 @@ class SinyServerListener {
         writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(user).getBytes, OK)
       case _ =>
         uri.startsWith("http") match {
-          case true => writeUrl(ctx.getChannel, uri)
+          case true => //writeUrl(ctx.getChannel, uri)
           case false =>
             val file = getFile(uri)
             file.exists match {
