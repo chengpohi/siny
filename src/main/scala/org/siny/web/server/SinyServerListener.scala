@@ -3,6 +3,15 @@ package org.siny.web.server
 import java.io.{File, RandomAccessFile}
 import java.net.URL
 
+import org.elasticsearch.common.netty.buffer.ChannelBuffers
+import org.elasticsearch.common.netty.channel.{Channel, ChannelHandlerContext}
+import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, DefaultHttpResponse, HttpResponseStatus, HttpRequest}
+import org.elasticsearch.common.netty.handler.stream.ChunkedFile
+import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus._
+import org.elasticsearch.common.netty.handler.codec.http.HttpVersion.HTTP_1_1
+import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import org.elasticsearch.common.netty.util.CharsetUtil
+
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
 
@@ -12,16 +21,6 @@ import org.siny.elastic.index.ElasticController
 import org.siny.model.{BookMark, User}
 import org.siny.file.FileUtils._
 
-import org.jboss.netty.channel._
-import org.jboss.netty.handler.codec.http._
-import org.jboss.netty.channel.ChannelHandlerContext
-import org.jboss.netty.handler.codec.http.HttpRequest
-import org.jboss.netty.buffer.ChannelBuffers
-import org.jboss.netty.handler.codec.http.HttpResponseStatus._
-import org.jboss.netty.handler.stream.ChunkedFile
-import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
-
-import org.elasticsearch.common.netty.util.CharsetUtil
 
 /**
  * BookMark model

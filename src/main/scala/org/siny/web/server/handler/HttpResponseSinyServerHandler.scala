@@ -1,10 +1,11 @@
 package org.siny.web.server.handler
 
 
-import org.jboss.netty.channel._
-import org.jboss.netty.handler.codec.http.HttpMethod._
-import org.jboss.netty.handler.codec.http.HttpResponseStatus._
-import org.jboss.netty.handler.codec.http._
+import org.elasticsearch.common.netty.channel._
+import org.elasticsearch.common.netty.handler.codec.http.HttpRequest
+import org.elasticsearch.common.netty.handler.codec.http.HttpMethod._
+import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+
 import org.siny.web.server.SinyServerListener
 import org.slf4j.LoggerFactory
 
