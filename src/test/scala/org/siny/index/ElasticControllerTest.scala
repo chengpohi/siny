@@ -1,4 +1,4 @@
-package org.siny.web.server.elastic.index
+package org.siny.index
 
 import org.scalatest.FlatSpec
 import org.siny.elastic.index.ElasticController
