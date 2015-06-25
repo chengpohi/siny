@@ -22,6 +22,7 @@ object ElasticController {
   lazy val client = ElasticClientConnector.client
 
   val BOOKMARK_TYPE: String = "bookmark"
+  val TAB_TYPE: String = "tab"
 
   def create(user: User, bookMark: BookMark): Unit = {
     client.execute {
@@ -30,10 +31,31 @@ object ElasticController {
   }
 
   def getBookMarksWithJson(user: User): String = {
+    val result = for (hit <- getTabsWithObject(user)) yield {
+      try {
+        val resp = client.execute {
+          search in user.name / BOOKMARK_TYPE query termQuery("_tab_id", hit.getId) start 0 limit Integer.MAX_VALUE sort (
+            by field "created_at" ignoreUnmapped true order ASC
+            )
+        }.await
+        "\"" + hit.getSource.get("name") + "\" : " + searchHitsToJSONString(resp.getHits.getHits)
+      } catch {
+        case ime: RemoteTransportException => {
+          ime.printStackTrace()
+          null
+        }
+        case e: Exception => throw e
+      }
+    }
+
+    result.mkString("{", ",", "}")
+  }
+
+  def getTabsWithObject(user: User): Array[SearchHit] = {
     try {
       val resp = client.execute {
-        search in user.name / BOOKMARK_TYPE query "*" start 0 limit Integer.MAX_VALUE sort (
-            by field "created_at" ignoreUnmapped true order ASC
+        search in user.name / TAB_TYPE query "*" start 0 limit Integer.MAX_VALUE sort (
+          by field "created_at" ignoreUnmapped true order ASC
           )
       }.await
       resp.getHits.getHits
@@ -46,7 +68,7 @@ object ElasticController {
     }
   }
 
-  def getBookMarksWithObject(user: User): Array[SearchHit]= {
+  def getBookMarksWithObject(user: User): Array[SearchHit] = {
     try {
       val resp = client.execute {
         search in user.name / BOOKMARK_TYPE query "*"

@@ -21,9 +21,14 @@ class ElasticControllerTest extends FlatSpec {
   }
 
   "ElasticController" should "get user info" in {
+    println(ElasticController.getBookMarksWithJson(user))
     assert(ElasticController.getBookMarksWithJson(user) != null)
   }
 
+  "ElasticController" should "get all user tabs" in {
+    ElasticController.getTabsWithObject(user).map(s => println(s.getSource))
+    assert(ElasticController.getTabsWithObject(user) != null)
+  }
 
   "ElasticController" should "update bookMark by id" in {
     Thread.sleep(1000)
@@ -32,8 +37,8 @@ class ElasticControllerTest extends FlatSpec {
   }
 
   "ElasticController" should "delete bookMark by id" in {
-    val id = ElasticController.getBookMarksWithObject(user)(0).getId
-    ElasticController.deleteBookMarkById(id, user)
+    /*val id = ElasticController.getBookMarksWithObject(user)(0).getId
+    ElasticController.deleteBookMarkById(id, user)*/
   }
 
 }

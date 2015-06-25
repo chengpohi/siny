@@ -32,7 +32,7 @@ class HttpResponseSinyServerHandler extends SimpleChannelUpstreamHandler {
 
   @throws(classOf[Exception])
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent): Unit = {
-    sinyServerListener.writeBuffer(ctx.getChannel, "Exception Has Occurred".getBytes, BAD_REQUEST)
+    sinyServerListener.writeBuffer(ctx.getChannel, "Exception has occurred".getBytes, BAD_REQUEST)
     LOG.warn("Exception: " + e.getCause.getLocalizedMessage)
   }
 
