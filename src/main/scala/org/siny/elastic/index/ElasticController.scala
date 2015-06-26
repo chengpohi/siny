@@ -7,7 +7,7 @@ import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.elastic.ElasticClientConnector
-import org.siny.model.{BookMark, User}
+import org.siny.model.{BookMark, User, Tab}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -24,17 +24,24 @@ object ElasticController {
   val BOOKMARK_TYPE: String = "bookmark"
   val TAB_TYPE: String = "tab"
 
-  def create(user: User, bookMark: BookMark): Unit = {
+  def createBookMark(user: User, bookMark: BookMark): Unit = {
     client.execute {
       index into user.name / BOOKMARK_TYPE doc bookMark
     }.await
   }
 
+  def createTab(user: User, tab: Tab): Unit = {
+    client.execute {
+      index into user.name / TAB_TYPE doc tab
+    }.await
+  }
+
+
   def getBookMarksWithJson(user: User): String = {
     val result = for (hit <- getTabsWithObject(user)) yield {
       try {
         val resp = client.execute {
-          search in user.name / BOOKMARK_TYPE query termQuery("_tab_id", hit.getId) start 0 limit Integer.MAX_VALUE sort (
+          search in user.name / BOOKMARK_TYPE query termQuery("_tab_id", hit.getId.toLowerCase) start 0 limit Integer.MAX_VALUE sort (
             by field "created_at" ignoreUnmapped true order ASC
             )
         }.await

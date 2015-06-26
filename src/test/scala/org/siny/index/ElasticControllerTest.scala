@@ -2,7 +2,7 @@ package org.siny.index
 
 import org.scalatest.FlatSpec
 import org.siny.elastic.index.ElasticController
-import org.siny.model.{BookMark, User}
+import org.siny.model.{Tab, BookMark, User}
 
 /**
  * BookMark model
@@ -10,14 +10,20 @@ import org.siny.model.{BookMark, User}
  */
 class ElasticControllerTest extends FlatSpec {
   val user = User("chengpohi")
+  val tab = Tab(Option(""), "jack")
   val bookMark = BookMark(Option(""), "jack", "http://www.baidu.com")
+
   "ElasticController " should " index user data" in {
     //ElasticController.create(null)
     ElasticController.getBookMarksWithJson(user) match {
-      case null => ElasticController.create(user, bookMark)
-      case s: String if s == "[]" => ElasticController.create(user, bookMark)
+      case null => ElasticController.createBookMark(user, bookMark)
+      case s: String if s == "[]" => ElasticController.createBookMark(user, bookMark)
       case _ => println("USER HAVE EXISTED NOT NEED CREATE.")
     }
+  }
+
+  "ElasticController " should " create user tab" in {
+    ElasticController.createTab(user, tab)
   }
 
   "ElasticController" should "get user info" in {

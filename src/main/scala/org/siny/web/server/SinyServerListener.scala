@@ -18,7 +18,7 @@ import org.json4s.jackson.JsonMethods._
 import org.slf4j.LoggerFactory
 
 import org.siny.elastic.index.ElasticController
-import org.siny.model.{BookMark, User}
+import org.siny.model.{BookMark, User, Tab}
 import org.siny.file.FileUtils._
 
 
@@ -43,15 +43,33 @@ class SinyServerListener {
   }
 
   def postListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val uriParts = httpRequest.getUri.split("/")
+    uriParts match {
+      case u: Array[String] if u.length == 2 && u(1) == ElasticController.BOOKMARK_TYPE =>
+        postBookMarkDealer(ctx, httpRequest)
+      case u: Array[String] if u.length == 2 && u(1) == ElasticController.TAB_TYPE =>
+        postTab(ctx, httpRequest)
+      case _ =>
+    }
+  }
+
+  def postTab(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val rawTab = httpRequest.getContent.toString(CharsetUtil.UTF_8)
+
+    val tab = parse(rawTab).extract[Tab]
+
+    ElasticController.createTab(user, tab)
+    writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
+  }
+
+  def postBookMarkDealer(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val rawBookMark = httpRequest.getContent.toString(CharsetUtil.UTF_8)
 
     val bookMark = parse(rawBookMark).extract[BookMark]
 
-    ElasticController.create(user, bookMark)
+    ElasticController.createBookMark(user, bookMark)
     writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
   }
-
-
 
   def getListener(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
