@@ -9,12 +9,19 @@
     <div class="role">
         <div class="col-md-9" role="main">
             <input ng-model="searchBookMark" type="text" class="form-control"> </input>
-            <div class="">
-                <ul class="">
+            <div class="marks">
+                <ul class="tabs nav nav-tabs">
                     <li ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark">
-                        <div class="tab">{{ tab }}</div>
+                        <a href="#{{ bookmarks.id }}" data-toggle="tab">
+                            {{ tab }}
+                        </a>
+                    </li>
+                </ul>
+                <div id="tabContent" class="tab-content">
+                    <div ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark"
+                         class="tab-pane fade in" id="{{ bookmarks.id }}">
                         <ul class="bs-glyphicons-list">
-                            <li ng-repeat="bookmark in bookmarks | filter:searchBookMark">
+                            <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark">
                                 <div class="markItem">
                                     <i class="glyphicon fa fa-trash fa-2x"
                                        ng-click="removeMarkItem(user, tab, $index)"></i>
@@ -32,8 +39,8 @@
                                 </div>
                             </li>
                         </ul>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3 column">
@@ -61,7 +68,11 @@
                         </div>
                         <div class="form-group">
                             <label for="bookmarkUrl">BookMark Tab</label>
-                            <input type="text" ng-model="bookmarkTab" id="bookmarkTab" class="form-control">
+                            <select ng-model="bookmarkTab" id="bookmarkTab" class="form-control">
+                                <option ng-repeat="(tab, bookmarks) in user.bookmark"
+                                        value='{"name": "{{tab}}", "id": "{{bookmarks.id}}" }'>{{ tab }}
+                                </option>
+                            </select>
                         </div>
                     </form>
                 </div>
@@ -93,7 +104,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" data-dismiss="modal"
-                            ng-click='addTab(tabName)'
+                            ng-click='addTab(user, tabName)'
                             class="btn btn-primary">Add
                     </button>
                 </div>

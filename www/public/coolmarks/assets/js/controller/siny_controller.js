@@ -21,28 +21,25 @@ siny.controller('sinyCtrl', function($scope, $http, localStorageService) {
     });
 
     $scope.append = function (user, bookMarkName, bookMarkUrl, bookMarkTab) {
-    	var bm = {'url': bookMarkUrl, 'name': bookMarkName}
-    	if (user.bookmark[bookMarkTab] === undefined) {
-			user.bookmark[bookMarkTab] = [];
-			user.bookmark[bookMarkTab].push(bm);
-    	} else {
-			user.bookmark[bookMarkTab].push(bm);
-		}
+    	var bm = {'url': bookMarkUrl, 'name': bookMarkName};
+    	var bmt = angular.fromJson(bookMarkTab);
+		user.bookmark[bmt.name].marks.push(bm);
 
-		postBookMark(bookMarkName, bookMarkUrl, "AU4wBCzRoaYyUtPpf_xo");
+		postBookMark(bookMarkName, bookMarkUrl, bmt.id);
 
 		$scope.bookMarkName = '';
 		$scope.bookMarkUrl = '';
 		$scope.bookMarkTab = '';
     };
 
-    $scope.addTab = function (tabName) {
+    $scope.addTab = function (user, tabName) {
+		user.bookmark[tabName] = {"marks": [], "id": ""};
     	postTab(tabName);
     };
 
     $scope.removeMarkItem = function(user, tab, index) {
-		var bookMarkId = user.bookmark[tab][index].id;
-		user.bookmark[tab].splice(index, 1);
+		var bookMarkId = user.bookmark[tab]["marks"][index].id;
+		user.bookmark[tab]["marks"].splice(index, 1);
 		deleteBookMark(bookMarkId);
     }
 

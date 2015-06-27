@@ -76,3 +76,15 @@ body {
 .container {
     padding: 20px;
 }
+
+.tab {
+    color: white;
+}
+
+.tabs {
+    list-style: none;
+}
+
+.marks {
+    margin-top: 5px
+}

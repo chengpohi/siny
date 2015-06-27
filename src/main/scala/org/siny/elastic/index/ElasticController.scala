@@ -45,7 +45,7 @@ object ElasticController {
             by field "created_at" ignoreUnmapped true order ASC
             )
         }.await
-        "\"" + hit.getSource.get("name") + "\" : " + searchHitsToJSONString(resp.getHits.getHits)
+        "\"" + hit.getSource.get("name") + "\" : { \"marks\": " + searchHitsToJSONString(resp.getHits.getHits) + ", \"id\": \"" + hit.getId + "\"}"
       } catch {
         case ime: RemoteTransportException => {
           ime.printStackTrace()
