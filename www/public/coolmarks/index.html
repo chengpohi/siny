@@ -11,7 +11,7 @@
             <input ng-model="searchBookMark" type="text" class="form-control"> </input>
             <div class="marks">
                 <ul class="tabs nav nav-tabs">
-                    <li ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark">
+                    <li ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark"  ng-class = "{'active': $index == 0}">
                         <a href="#{{ bookmarks.id }}" data-toggle="tab">
                             {{ tab }}
                         </a>
@@ -21,7 +21,7 @@
                     <div ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark"
                          class="tab-pane fade in" id="{{ bookmarks.id }}">
                         <ul class="bs-glyphicons-list">
-                            <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark">
+                            <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark" >
                                 <div class="markItem">
                                     <i class="glyphicon fa fa-trash fa-2x"
                                        ng-click="removeMarkItem(user, tab, $index)"></i>
