@@ -3,7 +3,10 @@
 <script src="./assets/js/controller/siny_controller.js"></script>
 <link rel=stylesheet type=text/css href="./assets/css/style.css">
 <link rel=stylesheet type=text/css href="./assets/css/coolmarks.css">
+<link rel="shortcut icon" href="./assets/img/snoopy.ico">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<title>Cool Marks, Your Own Marks</title>
+
 <body ng-app="siny" ng-controller="sinyCtrl">
 <div class="container">
     <div class="role">
@@ -11,7 +14,8 @@
             <input ng-model="searchBookMark" type="text" class="form-control"> </input>
             <div class="marks">
                 <ul class="tabs nav nav-tabs">
-                    <li ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark"  ng-class = "{'active': $index == 0}">
+                    <li ng-repeat="(tab, bookmarks) in user.bookmark" ng-class=
+                            "{'active': tab === 'All' }">
                         <a href="#{{ bookmarks.id }}" data-toggle="tab">
                             {{ tab }}
                         </a>
@@ -19,9 +23,32 @@
                 </ul>
                 <div id="tabContent" class="tab-content">
                     <div ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark"
-                         class="tab-pane fade in" id="{{ bookmarks.id }}">
-                        <ul class="bs-glyphicons-list">
-                            <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark" >
+                         class="tab-pane fade in" id="{{ bookmarks.id }}" ng-class=
+                                 "{'active': tab === 'All' }">
+                        <div ng-if="tab == 'All'">
+                            <ul class="bs-glyphicons-list"
+                                ng-repeat="(tab, bookmarks) in user.bookmark | filter:searchBookMark">
+                                <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark">
+                                    <div class="markItem">
+                                        <i class="glyphicon fa fa-trash fa-2x"
+                                           ng-click="removeMarkItem(user, tab, $index)"></i>
+                                        <a href="{{bookmark.url}}" target="_blank">
+                                            <div class="markBlock">
+                                                <div class="markUrl">
+                                                    {{bookmark.url | limitTo: 25}}
+                                                </div>
+                                                <hr/>
+                                                <div class="markInfo">
+                                                    {{bookmark.name | limitTo: 20}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul ng-if="tab != 'All'" class="bs-glyphicons-list">
+                            <li ng-repeat="bookmark in bookmarks.marks | filter:searchBookMark">
                                 <div class="markItem">
                                     <i class="glyphicon fa fa-trash fa-2x"
                                        ng-click="removeMarkItem(user, tab, $index)"></i>
@@ -69,7 +96,7 @@
                         <div class="form-group">
                             <label for="bookmarkUrl">BookMark Tab</label>
                             <select ng-model="bookmarkTab" id="bookmarkTab" class="form-control">
-                                <option ng-repeat="(tab, bookmarks) in user.bookmark"
+                                <option ng-repeat="(tab, bookmarks) in user.bookmark" ng-if="tab != 'All'"
                                         value='{"name": "{{tab}}", "id": "{{bookmarks.id}}" }'>{{ tab }}
                                 </option>
                             </select>
