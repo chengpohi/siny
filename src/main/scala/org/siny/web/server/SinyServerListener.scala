@@ -17,7 +17,7 @@ import org.json4s.jackson.JsonMethods._
 
 import org.slf4j.LoggerFactory
 
-import org.siny.elastic.index.ElasticController
+import org.siny.elastic.controller.ElasticController
 import org.siny.model.{BookMark, User, Tab}
 import org.siny.file.FileUtils._
 

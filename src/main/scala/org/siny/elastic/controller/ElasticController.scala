@@ -1,13 +1,14 @@
-package org.siny.elastic.index
+package org.siny.elastic.controller
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import org.elasticsearch.action.search.SearchResponse
 
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.elastic.ElasticClientConnector
-import org.siny.model.{BookMark, User, Tab}
+import org.siny.model.{BookMark, User, Tab, Field}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -60,12 +61,7 @@ object ElasticController {
 
   def getTabsWithObject(user: User): Array[SearchHit] = {
     try {
-      val resp = client.execute {
-        search in user.name / TAB_TYPE query "*" start 0 limit Integer.MAX_VALUE sort (
-          by field "created_at" ignoreUnmapped true order ASC
-          )
-      }.await
-      resp.getHits.getHits
+      getAllTypeData(user, TAB_TYPE).getHits.getHits
     } catch {
       case ime: RemoteTransportException => {
         ime.printStackTrace()
@@ -77,10 +73,7 @@ object ElasticController {
 
   def getBookMarksWithObject(user: User): Array[SearchHit] = {
     try {
-      val resp = client.execute {
-        search in user.name / BOOKMARK_TYPE query "*"
-      }.await
-      resp.getHits.getHits
+      getAllTypeData(user, BOOKMARK_TYPE).getHits.getHits
     } catch {
       case ime: RemoteTransportException => null
       case e: Exception => throw e
@@ -106,4 +99,46 @@ object ElasticController {
     }
     result.mkString("[", ",", "]")
   }
+
+  def addField(user: User, indexType: String, field: Field): Unit = {
+    try {
+      val name = field.name
+      val value = field.value
+      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
+        client execute {
+          update id hit.id in user.name + "/" + indexType script s"ctx._source.$name = '$value'"
+        }
+      })
+    } catch {
+      case ime: RemoteTransportException => {
+        ime.printStackTrace()
+        null
+      }
+      case e: Exception => throw e
+    }
+  }
+
+  def removeField(user: User, indexType: String, field: Field): Unit = {
+    try {
+      val name = field.name
+      val value = field.value
+      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
+        client execute {
+          update id hit.id in user.name + "/" + indexType script s"ctx._source.remove('$name')"
+        }
+      })
+    } catch {
+      case ime: RemoteTransportException => {
+        ime.printStackTrace()
+        null
+      }
+      case e: Exception => throw e
+    }
+  }
+
+  def getAllTypeData(user: User, indexType: String): SearchResponse = client.execute {
+    search in user.name / indexType query "*" start 0 limit Integer.MAX_VALUE sort (
+      by field "created_at" ignoreUnmapped true order ASC
+      )
+  }.await
 }

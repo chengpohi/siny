@@ -1,8 +1,8 @@
 package org.siny.index
 
 import org.scalatest.FlatSpec
-import org.siny.elastic.index.ElasticController
-import org.siny.model.{Tab, BookMark, User}
+import org.siny.elastic.controller.ElasticController
+import org.siny.model.{Tab, BookMark, User, Field}
 
 /**
  * BookMark model
@@ -40,6 +40,10 @@ class ElasticControllerTest extends FlatSpec {
     Thread.sleep(1000)
     val id = ElasticController.getBookMarksWithObject(user)(0).getId
     ElasticController.updateBookMarkById(user, BookMark(Option(id), "rose", "http://www.google.com"))
+  }
+
+  "ElasticController" should "add field name" in {
+    ElasticController.addField(user, ElasticController.BOOKMARK_TYPE, Field("test", "Hello"))
   }
 
   "ElasticController" should "delete bookMark by id" in {
