@@ -33,8 +33,7 @@ siny.controller('sinyCtrl', function($scope, $http, localStorageService) {
     };
 
     $scope.addTab = function (user, tabName) {
-		user.bookmark[tabName] = {"marks": [], "id": ""};
-    	postTab(tabName);
+    	postTab(tabName, user);
     };
 
     $scope.removeMarkItem = function(user, tab, index) {
@@ -47,9 +46,10 @@ siny.controller('sinyCtrl', function($scope, $http, localStorageService) {
 		return localStorageService.get(key);
     }
 
-    function postTab(tabName) {
+    function postTab(tabName, user) {
 		$http.post('/tab', {'name': tabName}).
 		    success(function(data, status, headers, config) {
+			user.bookmark[tabName] = {"marks": [], "id": data};
 		})
 		.error(function(data, status, headers, config) {
 		});

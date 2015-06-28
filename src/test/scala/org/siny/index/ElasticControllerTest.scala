@@ -10,7 +10,7 @@ import org.siny.model.{Tab, BookMark, User, Field}
  */
 class ElasticControllerTest extends FlatSpec {
   val user = User("chengpohi")
-  val tab = Tab(Option(""), "jack")
+  val tab = Tab(Option(""), "tino")
   val bookMark = BookMark(Option(""), "jack", "http://www.baidu.com")
 
   "ElasticController " should " index user data" in {
@@ -23,7 +23,8 @@ class ElasticControllerTest extends FlatSpec {
   }
 
   "ElasticController " should " create user tab" in {
-    ElasticController.createTab(user, tab)
+    val resultId = ElasticController.createTab(user, tab)
+    assert( resultId != null)
   }
 
   "ElasticController" should "get user info" in {

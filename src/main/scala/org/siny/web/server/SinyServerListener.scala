@@ -58,8 +58,8 @@ class SinyServerListener {
 
     val tab = parse(rawTab).extract[Tab]
 
-    ElasticController.createTab(user, tab)
-    writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
+    val resultId = ElasticController.createTab(user, tab)
+    writeBuffer(ctx.getChannel, resultId.getBytes, OK)
   }
 
   def postBookMarkDealer(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {

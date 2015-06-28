@@ -15,10 +15,11 @@ import org.siny.model.{Field, User}
 class ElasticBase {
   lazy val client = ElasticClientConnector.client
 
-  def createMap(user: User, indexType: String, docuemntMap: DocumentMap): Unit = {
-    client.execute {
+  def createMap(user: User, indexType: String, docuemntMap: DocumentMap): String = {
+    val resp = client.execute {
       index into user.name / indexType doc docuemntMap
     }.await
+    resp.getId
   }
 
   def addField(user: User, indexType: String, field: Field): Unit = {

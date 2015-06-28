@@ -21,9 +21,9 @@ object ElasticController extends ElasticBase {
   val BOOKMARK_TYPE: String = "bookmark"
   val TAB_TYPE: String = "tab"
 
-  def createBookMark(user: User, bookMark: BookMark): Unit = createMap(user, BOOKMARK_TYPE, bookMark)
+  def createBookMark(user: User, bookMark: BookMark): String = createMap(user, BOOKMARK_TYPE, bookMark)
 
-  def createTab(user: User, tab: Tab): Unit = createMap(user, TAB_TYPE, tab)
+  def createTab(user: User, tab: Tab): String = createMap(user, TAB_TYPE, tab)
 
 
   def getBookMarksWithJson(user: User): String = {
