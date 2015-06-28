@@ -2,13 +2,10 @@ package org.siny.elastic.controller
 
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.elasticsearch.action.search.SearchResponse
-
-import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.transport.RemoteTransportException
-import org.siny.elastic.ElasticClientConnector
-import org.siny.model.{BookMark, User, Tab, Field}
+import org.siny.model.{BookMark, Tab, User}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -18,24 +15,15 @@ import scala.util.parsing.json.JSONObject
  * BookMark model
  * Created by chengpohi on 3/1/15.
  */
-object ElasticController {
+object ElasticController extends ElasticBase {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
-  lazy val client = ElasticClientConnector.client
 
   val BOOKMARK_TYPE: String = "bookmark"
   val TAB_TYPE: String = "tab"
 
-  def createBookMark(user: User, bookMark: BookMark): Unit = {
-    client.execute {
-      index into user.name / BOOKMARK_TYPE doc bookMark
-    }.await
-  }
+  def createBookMark(user: User, bookMark: BookMark): Unit = createMap(user, BOOKMARK_TYPE, bookMark)
 
-  def createTab(user: User, tab: Tab): Unit = {
-    client.execute {
-      index into user.name / TAB_TYPE doc tab
-    }.await
-  }
+  def createTab(user: User, tab: Tab): Unit = createMap(user, TAB_TYPE, tab)
 
 
   def getBookMarksWithJson(user: User): String = {
@@ -99,46 +87,4 @@ object ElasticController {
     }
     result.mkString("[", ",", "]")
   }
-
-  def addField(user: User, indexType: String, field: Field): Unit = {
-    try {
-      val name = field.name
-      val value = field.value
-      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
-        client execute {
-          update id hit.id in user.name + "/" + indexType script s"ctx._source.$name = '$value'"
-        }
-      })
-    } catch {
-      case ime: RemoteTransportException => {
-        ime.printStackTrace()
-        null
-      }
-      case e: Exception => throw e
-    }
-  }
-
-  def removeField(user: User, indexType: String, field: Field): Unit = {
-    try {
-      val name = field.name
-      val value = field.value
-      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
-        client execute {
-          update id hit.id in user.name + "/" + indexType script s"ctx._source.remove('$name')"
-        }
-      })
-    } catch {
-      case ime: RemoteTransportException => {
-        ime.printStackTrace()
-        null
-      }
-      case e: Exception => throw e
-    }
-  }
-
-  def getAllTypeData(user: User, indexType: String): SearchResponse = client.execute {
-    search in user.name / indexType query "*" start 0 limit Integer.MAX_VALUE sort (
-      by field "created_at" ignoreUnmapped true order ASC
-      )
-  }.await
 }
