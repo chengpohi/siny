@@ -1,25 +1,21 @@
-package org.siny.web.server
+package org.siny.web.server.listener
 
 import java.io.{File, RandomAccessFile}
 import java.net.URL
 
 import org.elasticsearch.common.netty.buffer.ChannelBuffers
 import org.elasticsearch.common.netty.channel.{Channel, ChannelHandlerContext}
-import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, DefaultHttpResponse, HttpResponseStatus, HttpRequest}
-import org.elasticsearch.common.netty.handler.stream.ChunkedFile
-import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus._
+import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.{BAD_REQUEST, _}
 import org.elasticsearch.common.netty.handler.codec.http.HttpVersion.HTTP_1_1
-import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import org.elasticsearch.common.netty.handler.codec.http.{DefaultHttpResponse, HttpHeaders, HttpRequest, HttpResponseStatus}
+import org.elasticsearch.common.netty.handler.stream.ChunkedFile
 import org.elasticsearch.common.netty.util.CharsetUtil
-
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
-
-import org.slf4j.LoggerFactory
-
 import org.siny.elastic.controller.ElasticController
-import org.siny.model.{BookMark, User, Tab}
 import org.siny.file.FileUtils._
+import org.siny.model.{BookMark, Tab, User}
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -64,6 +60,7 @@ class SinyServerListener {
 
   def postBookMarkDealer(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val rawBookMark = httpRequest.getContent.toString(CharsetUtil.UTF_8)
+    httpRequest.headers()
 
     val bookMark = parse(rawBookMark).extract[BookMark]
 
