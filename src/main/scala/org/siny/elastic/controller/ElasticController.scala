@@ -6,24 +6,34 @@ import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.model.{BookMark, Tab, User}
+import org.siny.util.HashUtil
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
 import scala.util.parsing.json.JSONObject
 
 /**
- * BookMark model
+ * Elastic Controller
  * Created by chengpohi on 3/1/15.
  */
 object ElasticController extends ElasticBase {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
 
-  val BOOKMARK_TYPE: String = "bookmark"
-  val TAB_TYPE: String = "tab"
 
   def createBookMark(user: User, bookMark: BookMark): String = createMap(user, BOOKMARK_TYPE, bookMark)
 
   def createTab(user: User, tab: Tab): String = createMap(user, TAB_TYPE, tab)
+
+  def createUserInfo(user: User): String = createMapWithId(user, INFO_TYPE, 1)
+
+  def checkUserAccess(user: User): Boolean = {
+    val resp = client.execute {
+      get id 1 from user.name -> INFO_TYPE
+    }.await
+    resp.getSource.get("password").equals(
+      HashUtil.hashUserPassword(user.password.get)
+    )
+  }
 
 
   def getBookMarksWithJson(user: User): String = {
@@ -72,6 +82,12 @@ object ElasticController extends ElasticBase {
     client execute {
       delete id _id from user.name + "/" + BOOKMARK_TYPE
     }
+  }
+
+  def deleteIndexByIndexName(indexName: String): Unit = {
+    client.execute {
+      delete index indexName
+    }.await
   }
 
   def updateBookMarkById(user: User, bookMark: BookMark): Unit = {

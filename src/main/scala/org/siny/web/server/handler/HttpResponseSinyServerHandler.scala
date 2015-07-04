@@ -5,8 +5,7 @@ import org.elasticsearch.common.netty.channel._
 import org.elasticsearch.common.netty.handler.codec.http.HttpRequest
 import org.elasticsearch.common.netty.handler.codec.http.HttpMethod._
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
-
-import org.siny.web.server.SinyServerListener
+import org.siny.web.server.listener.SinyServerListener
 import org.slf4j.LoggerFactory
 
 /**

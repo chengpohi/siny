@@ -15,6 +15,7 @@ import org.json4s.jackson.JsonMethods._
 import org.siny.elastic.controller.ElasticController
 import org.siny.file.FileUtils._
 import org.siny.model.{BookMark, Tab, User}
+import org.siny.web.server.helper.RequestPath
 import org.slf4j.LoggerFactory
 
 
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory
  * Created by chengpohi on 6/12/15.
  */
 class SinyServerListener {
-  val user = User("chengpohi")
+  val USER = User("chengpohi")
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
   implicit val formats = DefaultFormats
 
@@ -31,7 +32,7 @@ class SinyServerListener {
     val uriParts = httpRequest.getUri.split("/")
     uriParts match {
       case u: Array[String] if u.length == 3 && u(1) == ElasticController.BOOKMARK_TYPE =>
-        ElasticController.deleteBookMarkById(u(2), user)
+        ElasticController.deleteBookMarkById(u(2), USER)
         writeBuffer(ctx.getChannel, ("Delete BookMark Ok, Id: " + u(2)).getBytes, OK)
       case _ =>
         writeBuffer(ctx.getChannel, "UNKNOWN URL VISIT".getBytes, BAD_REQUEST)
@@ -45,6 +46,8 @@ class SinyServerListener {
         postBookMarkDealer(ctx, httpRequest)
       case u: Array[String] if u.length == 2 && u(1) == ElasticController.TAB_TYPE =>
         postTab(ctx, httpRequest)
+      case u: Array[String] if u.length == 2 && u(1) == RequestPath.REGISTER =>
+        registerUser(ctx, httpRequest)
       case _ =>
     }
   }
@@ -54,7 +57,7 @@ class SinyServerListener {
 
     val tab = parse(rawTab).extract[Tab]
 
-    val resultId = ElasticController.createTab(user, tab)
+    val resultId = ElasticController.createTab(USER, tab)
     writeBuffer(ctx.getChannel, resultId.getBytes, OK)
   }
 
@@ -64,15 +67,24 @@ class SinyServerListener {
 
     val bookMark = parse(rawBookMark).extract[BookMark]
 
-    ElasticController.createBookMark(user, bookMark)
+    ElasticController.createBookMark(USER, bookMark)
     writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
+  }
+
+  def registerUser(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    val rawUser = httpRequest.getContent.toString(CharsetUtil.UTF_8)
+
+    val user = parse(rawUser).extract[User]
+
+    val resultId = ElasticController.createUserInfo(user)
+    writeBuffer(ctx.getChannel, resultId.getBytes, OK)
   }
 
   def getListener(ctx: ChannelHandlerContext, uri: String): Unit = {
     val uriParts = uri.split("/")
     uriParts match {
       case u: Array[String] if u.length > 1 && u(1) == ElasticController.BOOKMARK_TYPE =>
-        writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(user).getBytes, OK)
+        writeBuffer(ctx.getChannel, ElasticController.getBookMarksWithJson(USER).getBytes, OK)
       case _ =>
         uri.startsWith("http") match {
           case true => //writeUrl(ctx.getChannel, uri)
