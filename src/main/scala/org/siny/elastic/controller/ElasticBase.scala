@@ -3,11 +3,12 @@ package org.siny.elastic.controller
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType.{DateType, StringType}
 import com.sksamuel.elastic4s.source.DocumentMap
+import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.elastic.ElasticClientConnector
-import org.siny.model.{Tab, Info, Field, User}
+import org.siny.model.{Field, Tab, User}
 
 /**
  * ElasticBase function
@@ -46,29 +47,27 @@ class ElasticBase {
     }.await
   }
 
-  def createMap(user: User, indexType: String, docuemntMap: DocumentMap): String = {
+  def createMap(indexName: String, indexType: String, docuemntMap: DocumentMap): String = {
     val resp = client.execute {
-      index into user.name / indexType doc docuemntMap
+      index into indexName / indexType doc docuemntMap
     }.await
     resp.getId
   }
 
-  def createMapWithId(user: User, indexType: String, specifiedId: Integer): String = {
-    createIndex(user.name)
-    val info: Info = Info(user.password.get)
+  def indexMapById(indexName: String, indexType: String, specifiedId: Integer, info: DocumentMap): IndexResponse = {
     val resp = client.execute {
-      index into user.name / indexType doc info id specifiedId
+      index into indexName / indexType doc info id specifiedId
     }.await
-    resp.getId
+    resp
   }
 
-  def addField(user: User, indexType: String, field: Field): Unit = {
+  def addField(indexName: String, indexType: String, field: Field): Unit = {
     try {
       val name = field.name
       val value = field.value
-      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
+      getAllTypeData(indexName, indexType).getHits.getHits.map(hit => {
         client execute {
-          update id hit.id in user.name + "/" + indexType script s"ctx._source.$name = '$value'"
+          update id hit.id in indexName + "/" + indexType script s"ctx._source.$name = '$value'"
         }
       })
     } catch {
@@ -79,13 +78,13 @@ class ElasticBase {
     }
   }
 
-  def removeField(user: User, indexType: String, field: Field): Unit = {
+  def removeField(indexName: String, indexType: String, field: Field): Unit = {
     try {
       val name = field.name
       val value = field.value
-      getAllTypeData(user, indexType).getHits.getHits.map(hit => {
+      getAllTypeData(indexName, indexType).getHits.getHits.map(hit => {
         client execute {
-          update id hit.id in user.name + "/" + indexType script s"ctx._source.remove('$name')"
+          update id hit.id in indexName + "/" + indexType script s"ctx._source.remove('$name')"
         }
       })
     } catch {
@@ -96,8 +95,8 @@ class ElasticBase {
     }
   }
 
-  def getAllTypeData(user: User, indexType: String): SearchResponse = client.execute {
-    search in user.name / indexType query "*" start 0 limit Integer.MAX_VALUE sort (
+  def getAllTypeData(indexName: String, indexType: String): SearchResponse = client.execute {
+    search in indexName / indexType query "*" start 0 limit Integer.MAX_VALUE sort (
       by field "created_at" ignoreUnmapped true order ASC
       )
   }.await

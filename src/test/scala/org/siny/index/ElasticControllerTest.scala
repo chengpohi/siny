@@ -57,7 +57,7 @@ class ElasticControllerTest extends FlatSpec {
   }
 
   "ElasticController" should "add field name" in {
-    ElasticController.addField(user, ElasticController.BOOKMARK_TYPE, Field("test", "Hello"))
+    ElasticController.addField(user.name, ElasticController.BOOKMARK_TYPE, Field("test", "Hello"))
   }
 
   "ElasticController" should "delete bookMark by id" in {

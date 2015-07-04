@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.transport.RemoteTransportException
-import org.siny.model.{BookMark, Tab, User}
+import org.siny.model.{Info, BookMark, Tab, User}
 import org.siny.util.HashUtil
 import org.slf4j.LoggerFactory
 
@@ -20,11 +20,15 @@ object ElasticController extends ElasticBase {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
 
 
-  def createBookMark(user: User, bookMark: BookMark): String = createMap(user, BOOKMARK_TYPE, bookMark)
+  def createBookMark(user: User, bookMark: BookMark): String = createMap(user.name, BOOKMARK_TYPE, bookMark)
 
-  def createTab(user: User, tab: Tab): String = createMap(user, TAB_TYPE, tab)
+  def createTab(user: User, tab: Tab): String = createMap(user.name, TAB_TYPE, tab)
 
-  def createUserInfo(user: User): String = createMapWithId(user, INFO_TYPE, 1)
+  def createUserInfo(user: User): String = {
+    createIndex(user.name)
+    val info: Info = Info(user.password.get)
+    indexMapById(user.name, INFO_TYPE, 1, info).getId
+  }
 
   def checkUserAccess(user: User): Boolean = {
     val resp = client.execute {
@@ -59,7 +63,7 @@ object ElasticController extends ElasticBase {
 
   def getTabsWithObject(user: User): Array[SearchHit] = {
     try {
-      getAllTypeData(user, TAB_TYPE).getHits.getHits
+      getAllTypeData(user.name, TAB_TYPE).getHits.getHits
     } catch {
       case ime: RemoteTransportException => {
         ime.printStackTrace()
@@ -71,7 +75,7 @@ object ElasticController extends ElasticBase {
 
   def getBookMarksWithObject(user: User): Array[SearchHit] = {
     try {
-      getAllTypeData(user, BOOKMARK_TYPE).getHits.getHits
+      getAllTypeData(user.name, BOOKMARK_TYPE).getHits.getHits
     } catch {
       case ime: RemoteTransportException => null
       case e: Exception => throw e

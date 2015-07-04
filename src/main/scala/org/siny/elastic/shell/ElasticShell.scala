@@ -25,7 +25,7 @@ object ElasticShell {
           val fieldName = readLine()
           println("Input Field Value:")
           val fieldValue = readLine()
-          ElasticController.addField(user, indexType, Field(fieldName, fieldValue))
+          ElasticController.addField(user.name, indexType, Field(fieldName, fieldValue))
         }
         case "rf" => {
           println("Remove a Field:")
@@ -35,7 +35,7 @@ object ElasticShell {
           val indexType = readLine()
           println("Input Field Name:")
           val fieldName = readLine()
-          ElasticController.removeField(user, indexType, Field(fieldName, ""))
+          ElasticController.removeField(user.name, indexType, Field(fieldName, ""))
           println("remove finished ~~~")
         }
         case _ =>
