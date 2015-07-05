@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 
 
 /**
- * BookMark model
+ * Siny Server Listener
  * Created by chengpohi on 6/12/15.
  */
 class SinyServerListener {
@@ -63,7 +63,6 @@ class SinyServerListener {
 
   def postBookMarkDealer(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val rawBookMark = httpRequest.getContent.toString(CharsetUtil.UTF_8)
-    httpRequest.headers()
 
     val bookMark = parse(rawBookMark).extract[BookMark]
 
@@ -128,6 +127,7 @@ class SinyServerListener {
     response.headers.add(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8")
     response.headers.add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE)
     response.headers.add(HttpHeaders.Names.CONTENT_LENGTH, response.getContent.readableBytes)
+    response.headers.add(HttpHeaders.Names.SET_COOKIE, "cookieID=123456")
 
     channel.write(response)
   }
