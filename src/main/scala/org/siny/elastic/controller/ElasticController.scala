@@ -44,7 +44,7 @@ object ElasticController extends ElasticBase {
     val result = for (hit <- getTabsWithObject(user)) yield {
       try {
         val resp = client.execute {
-          search in user.name / BOOKMARK_TYPE query termQuery("_tab_id", hit.getId.toLowerCase) start 0 limit Integer.MAX_VALUE sort (
+          search in user.name / BOOKMARK_TYPE query filteredQuery postFilter termFilter("_tab_id", hit.getId.toLowerCase) start 0 limit Integer.MAX_VALUE sort (
             by field "created_at" ignoreUnmapped true order ASC
             )
         }.await

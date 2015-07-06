@@ -8,7 +8,7 @@ import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.sort.SortOrder.ASC
 import org.elasticsearch.transport.RemoteTransportException
 import org.siny.elastic.ElasticClientConnector
-import org.siny.model.{Field, Tab, User}
+import org.siny.model.{Field, Tab}
 
 /**
  * ElasticBase function
@@ -96,7 +96,7 @@ class ElasticBase {
   }
 
   def getAllTypeData(indexName: String, indexType: String): SearchResponse = client.execute {
-    search in indexName / indexType query "*" start 0 limit Integer.MAX_VALUE sort (
+    search in indexName / indexType query filteredQuery postFilter matchAllFilter start 0 limit Integer.MAX_VALUE sort (
       by field "created_at" ignoreUnmapped true order ASC
       )
   }.await
