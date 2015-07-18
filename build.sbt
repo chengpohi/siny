@@ -15,7 +15,7 @@ libraryDependencies ++= {
     "org.slf4j" % "slf4j-simple" % "1.7.7",
     "com.typesafe.akka" %% "akka-actor" % "2.3.8",
     "com.typesafe.akka" %% "akka-testkit" % "2.3.8",
-    "com.sksamuel.elastic4s" %% "elastic4s" % "1.5.2",
+    "com.secer.elastic" % "elasticservice_2.11" % "1.0",
     "org.json4s" %% "json4s-native" % "3.2.10",
     "org.json4s" %% "json4s-jackson" % "3.2.10",
     "org.scalatest" %% "scalatest" % "2.2.1" % "test"

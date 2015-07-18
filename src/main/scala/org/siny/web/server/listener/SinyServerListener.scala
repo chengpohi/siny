@@ -3,6 +3,8 @@ package org.siny.web.server.listener
 import java.io.{File, RandomAccessFile}
 import java.net.URL
 
+import com.secer.elastic.controller.ElasticController
+import com.secer.elastic.model.{BookMark, User, Tab}
 import org.elasticsearch.common.netty.buffer.ChannelBuffers
 import org.elasticsearch.common.netty.channel.{Channel, ChannelHandlerContext}
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.{BAD_REQUEST, _}
@@ -12,9 +14,7 @@ import org.elasticsearch.common.netty.handler.stream.ChunkedFile
 import org.elasticsearch.common.netty.util.CharsetUtil
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
-import org.siny.elastic.controller.ElasticController
 import org.siny.file.FileUtils._
-import org.siny.model.{BookMark, Tab, User}
 import org.siny.web.server.helper.RequestPath
 import org.slf4j.LoggerFactory
 
