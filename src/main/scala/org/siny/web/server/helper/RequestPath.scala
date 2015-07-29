@@ -6,4 +6,5 @@ package org.siny.web.server.helper
  */
 object RequestPath {
   val REGISTER = "register"
+  val LOGIN = "login.html"
 }

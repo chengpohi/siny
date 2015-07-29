@@ -39,6 +39,7 @@ class SinyServerListener {
     }
   }
 
+
   def postListener(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
     val uriParts = httpRequest.getUri.split("/")
     uriParts match {
@@ -46,6 +47,8 @@ class SinyServerListener {
         postBookMarkDealer(ctx, httpRequest)
       case u: Array[String] if u.length == 2 && u(1) == ElasticController.TAB_TYPE =>
         postTab(ctx, httpRequest)
+      case u: Array[String] if u.length == 2 && u(1) == RequestPath.LOGIN =>
+        userLogin(ctx, httpRequest)
       case u: Array[String] if u.length == 2 && u(1) == RequestPath.REGISTER =>
         registerUser(ctx, httpRequest)
       case _ =>
@@ -68,6 +71,10 @@ class SinyServerListener {
 
     ElasticController.createBookMark(USER, bookMark)
     writeBuffer(ctx.getChannel, "Create Success".getBytes, OK)
+  }
+
+  def userLogin(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
+    writeBuffer(ctx.getChannel, "".getBytes, OK)
   }
 
   def registerUser(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
