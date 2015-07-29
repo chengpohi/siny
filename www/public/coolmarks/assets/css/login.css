@@ -30,9 +30,14 @@ form {
 }
 
 div[role="main"] {
-  height: 70%;
-  margin-top: 10%;
+  height: 75%;
+  margin-top: 5%;
   border-left: black solid 1px;
   top: 50%;
   bottom: 0;
+}
+.logo {
+  width: 100%;
+  margin-top: 50%;
+  padding-right: 20px;
 }

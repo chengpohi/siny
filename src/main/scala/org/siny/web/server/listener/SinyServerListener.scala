@@ -74,7 +74,22 @@ class SinyServerListener {
   }
 
   def userLogin(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
-    writeBuffer(ctx.getChannel, "".getBytes, OK)
+    val rawUser = httpRequest.getContent.toString(CharsetUtil.UTF_8).split("&")
+
+    def validateUser: Unit = {
+      val email = rawUser(0).split("=")(1)
+      val password = rawUser(1).split("=")(1)
+
+      val user = User("", Option(email), Option(password))
+      writeBuffer(ctx.getChannel, "".getBytes, OK)
+    }
+
+    rawUser(0).endsWith("=") || rawUser(1).endsWith("=") match {
+      case true => writeBuffer(ctx.getChannel, "Please input username with password!".getBytes, BAD_REQUEST)
+      case false => {
+        validateUser
+      }
+    }
   }
 
   def registerUser(ctx: ChannelHandlerContext, httpRequest: HttpRequest): Unit = {
