@@ -2,12 +2,15 @@ package org.siny.web.server.cache
 
 import com.secer.elastic.model.User
 
-import scala.collection.mutable.ListBuffer
+import scala.collection._
+import scala.collection.convert.decorateAsScala._
+import java.util.concurrent.ConcurrentHashMap
+
 
 /**
  * BookMark model
  * Created by chengpohi on 7/31/15.
  */
 object LoginUserCache {
-  var LOGINED_USER = ListBuffer[User]()
+  val LOGINED_USER: concurrent.Map[String, User] = new ConcurrentHashMap[String, User]().asScala
 }
