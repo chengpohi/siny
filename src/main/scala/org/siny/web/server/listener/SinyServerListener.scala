@@ -170,7 +170,11 @@ class SinyServerListener {
     response.headers.add(CONTENT_TYPE, "text/html; charset=UTF-8")
     response.headers.add(CONNECTION, KEEP_ALIVE)
     response.headers.add(CONTENT_LENGTH, response.getContent.readableBytes)
-    response.headers.add(SET_COOKIE, s"cookieID=$cookieId")
+    cookieId match {
+      case s if s.length != 0 =>
+        response.headers.add(SET_COOKIE, s"cookieID=$cookieId")
+      case _  =>
+    }
 
     channel.write(response)
   }
