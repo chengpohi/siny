@@ -18,6 +18,7 @@ libraryDependencies ++= {
     "com.secer.elastic" % "elasticservice_2.11" % "1.0",
     "org.json4s" %% "json4s-native" % "3.2.10",
     "org.json4s" %% "json4s-jackson" % "3.2.10",
+    "com.google.guava" % "guava" % "18.0",
     "org.scalatest" %% "scalatest" % "2.2.1" % "test"
   )
 }

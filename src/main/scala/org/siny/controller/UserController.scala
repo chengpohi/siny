@@ -1,7 +1,7 @@
 package org.siny.controller
 
-import com.secer.elastic.model.User
-import org.siny.web.server.annotation.{Component, RequestMapping}
+import org.siny.web.server.response.HttpResponse
+import org.siny.web.server.rest.controller.{RestAction, RestController}
 import org.siny.web.server.session.HttpSession
 
 /**
@@ -9,13 +9,18 @@ import org.siny.web.server.session.HttpSession
  * Created by chengpohi on 8/1/15.
  */
 
-@Component
-class UserController {
-  @RequestMapping(path = "/register.html", method = "POST")
-  def createUser(user: User, httpSession: HttpSession): Unit = {
+class UserController(httpSession: HttpSession, controller: RestController) extends RestAction{
+
+  def apply(): Unit = {
+    controller.registerHandler("POST", "/register.html", this.createUser)
+    controller.registerHandler("POST", "/login.html", this.userLogin)
   }
 
-  @RequestMapping(path = "/login.html", method = "POST")
-  def userLogin(user: User, httpSession: HttpSession): Unit = {
+  def createUser(httpSession: HttpSession): HttpResponse = {
+    null
+  }
+
+  def userLogin(httpSession: HttpSession): HttpResponse = {
+    null
   }
 }
