@@ -52,7 +52,7 @@ object ResponseWriter {
   }
 
   def writeBuffer(channel: Channel, httpResponse: HttpResponse): Unit = {
-    writeBuffer(channel, httpResponse.content.getBytes, httpResponse.status, "")
+    writeBuffer(channel, httpResponse.content.getBytes, httpResponse.status, httpResponse.cookie.getOrElse(""))
   }
 
   def writeBuffer(channel: Channel, data: Array[Byte], status: HttpResponseStatus): Unit = {

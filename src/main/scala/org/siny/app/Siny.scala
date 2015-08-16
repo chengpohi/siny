@@ -9,7 +9,8 @@ import org.elasticsearch.common.netty.channel.socket.nio.NioServerSocketChannelF
 import org.elasticsearch.common.netty.channel.{ChannelPipeline, ChannelPipelineFactory, Channels}
 import org.elasticsearch.common.netty.handler.codec.http.{HttpChunkAggregator, HttpRequestDecoder, HttpResponseEncoder}
 import org.elasticsearch.common.netty.handler.stream.ChunkedWriteHandler
-import org.siny.controller.UserController
+import org.siny.controller.{TabController, BookMarkController}
+import org.siny.controller.UserAction.{registerUser, userInfo, userLogin}
 import org.siny.web.server.handler.RestServerHandler
 import org.siny.web.server.rest.controller.RestController.registerHandler
 import org.slf4j.LoggerFactory
@@ -51,9 +52,15 @@ object Siny {
   }
 
   def initialize(): Unit = {
-    registerHandler("POST", "/register.html", UserController.createUser)
-    registerHandler("POST", "/login.html", UserController.userLogin)
-    registerHandler("GET", "/user.html", UserController.userInfo)
+    registerHandler("POST", "/register.html", registerUser)
+    registerHandler("POST", "/login.html", userLogin)
+    registerHandler("GET", "/user.html", userInfo)
+
+    registerHandler("GET", "/bookmark", BookMarkController.getBookMarks)
+    registerHandler("POST", "/bookmark", BookMarkController.postBookMark)
+    registerHandler("DELETE", "/bookmark", BookMarkController.deleteBookMark)
+
+    registerHandler("POST", "/tab", TabController.postBookMark)
   }
 }
 
