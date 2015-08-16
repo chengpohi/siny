@@ -4,10 +4,10 @@ import org.siny.web.server.response.HttpResponse
 import org.siny.web.server.session.HttpSession
 
 /**
- * RestController
+ * RestController to register controller http request
  * Created by chengpohi on 8/14/15.
  */
-class RestController {
+object RestController {
   val GET = "GET"
   val POST = "POST"
   val PUT = "PUT"
@@ -22,10 +22,10 @@ class RestController {
 
   def registerHandler(method: String, path: String, f: HttpSession => HttpResponse): Unit = {
     method match {
-      case GET => getActions += path -> f _
-      case POST => postActions += path -> f _
-      case PUT => putActions += path -> f _
-      case DELETE => deleteActions += path -> f _
+      case GET => getActions += path -> f
+      case POST => postActions += path -> f
+      case PUT => putActions += path -> f
+      case DELETE => deleteActions += path -> f
       case _ =>
     }
   }

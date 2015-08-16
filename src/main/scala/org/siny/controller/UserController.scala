@@ -1,7 +1,8 @@
 package org.siny.controller
 
+import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus
 import org.siny.web.server.response.HttpResponse
-import org.siny.web.server.rest.controller.{RestAction, RestController}
+import org.siny.web.server.rest.controller.RestAction
 import org.siny.web.server.session.HttpSession
 
 /**
@@ -9,18 +10,16 @@ import org.siny.web.server.session.HttpSession
  * Created by chengpohi on 8/1/15.
  */
 
-class UserController(httpSession: HttpSession, controller: RestController) extends RestAction{
-
-  def apply(): Unit = {
-    controller.registerHandler("POST", "/register.html", this.createUser)
-    controller.registerHandler("POST", "/login.html", this.userLogin)
-  }
-
+object UserController extends RestAction {
   def createUser(httpSession: HttpSession): HttpResponse = {
     null
   }
 
   def userLogin(httpSession: HttpSession): HttpResponse = {
     null
+  }
+
+  def userInfo(httpSession: HttpSession): HttpResponse = {
+    HttpResponse("Hello Chengpohi", HttpResponseStatus.ACCEPTED)
   }
 }

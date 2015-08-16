@@ -3,34 +3,39 @@ package org.siny.web.server.handler
 import org.elasticsearch.common.netty.channel._
 import org.elasticsearch.common.netty.handler.codec.http.HttpMethod._
 import org.elasticsearch.common.netty.handler.codec.http.HttpRequest
-import org.siny.web.server.response.ResponseWriter
+import org.siny.web.server.response.ResponseWriter.{writeBuffer, writeFile}
 import org.siny.web.server.rest.controller.RestController
+import org.siny.web.server.rest.controller.RestController.getActions
 import org.siny.web.server.session.HttpSession
 import org.slf4j.LoggerFactory
 
 /**
+ * Rest Server Handler to deal Http Request
  * Created by chengpohi on 4/18/15.
  */
 class RestServerHandler extends SimpleChannelUpstreamHandler {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
 
-  val restController = new RestController()
-  val responseWriter = new ResponseWriter()
+
 
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = {
     val httpRequest = e.getMessage.asInstanceOf[HttpRequest]
     val httpSession = HttpSession(null, httpRequest)
 
-    LOG.info("IP: " + e.getRemoteAddress + " VISIT URL: " + httpRequest.getUri + " Method:" + httpRequest.getMethod)
-    val f: restController.DealerType = httpRequest.getMethod match {
-      case GET => restController.getActions.getOrElse(httpRequest.getUri, null)
-      case POST => restController.getActions.getOrElse(httpRequest.getUri, null)
-      case PUT => restController.getActions.getOrElse(httpRequest.getUri, null)
-      case DELETE => restController.getActions.getOrElse(httpRequest.getUri, null)
+    val uri: String = httpRequest.getUri
+    LOG.info("IP: " + e.getRemoteAddress + " VISIT URL: " + uri + " Method:" + httpRequest.getMethod)
+    val f: RestController.DealerType = httpRequest.getMethod match {
+      case GET => getActions.getOrElse(uri, null)
+      case POST => getActions.getOrElse(uri, null)
+      case PUT => getActions.getOrElse(uri, null)
+      case DELETE => getActions.getOrElse(uri, null)
       case _ => null
     }
 
-    responseWriter.writeBuffer(ctx.getChannel, f(httpSession))
+    f match {
+      case null => writeFile(ctx.getChannel, uri, httpSession)
+      case _ => writeBuffer(ctx.getChannel, f(httpSession))
+    }
   }
 
   @throws(classOf[Exception])

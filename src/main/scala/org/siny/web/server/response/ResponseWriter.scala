@@ -11,12 +11,14 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus._
 import org.elasticsearch.common.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.elasticsearch.common.netty.handler.codec.http.{DefaultHttpResponse, HttpResponseStatus}
 import org.elasticsearch.common.netty.handler.stream.ChunkedFile
+import org.siny.web.server.session.HttpSession
+import org.siny.file.FileUtils._
 
 /**
  * siny
  * Created by chengpohi on 8/15/15.
  */
-class ResponseWriter {
+object ResponseWriter {
   def writeProxy(channel: Channel, uri: String): Unit = {
     val conn = new URL(uri).openConnection()
 
@@ -26,6 +28,14 @@ class ResponseWriter {
 
     writeBuffer(channel, data, OK)
     is.close()
+  }
+
+  def writeFile(channel: Channel, uri: String, httpSession: HttpSession): Unit = {
+    val file = getFile(uri)
+    file.exists match {
+      case true => writeFile(channel, file, OK)
+      case false => writeBuffer(channel, (uri + ":" + " 404 Not Found").getBytes, NOT_FOUND)
+    }
   }
 
   def writeFile(channel: Channel, file: File, status: HttpResponseStatus): Unit = {
