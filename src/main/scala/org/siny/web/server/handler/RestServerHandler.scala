@@ -25,7 +25,6 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
 
     val user = visitHandler(ctx, httpRequest)
 
-    val httpSession = HttpSession(user, httpRequest)
 
     val uri: String = httpRequest.getUri
 
@@ -38,8 +37,12 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
       case _ => null
     }
 
+    val httpSession = HttpSession(user, httpRequest)
+
     f match {
-      case null => writeFile(ctx.getChannel, uri, httpSession)
+      case null => {
+        writeFile(ctx.getChannel, uri, httpSession)
+      }
       case _ => writeBuffer(ctx.getChannel, f(httpSession))
     }
   }

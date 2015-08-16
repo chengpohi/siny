@@ -1,4 +1,4 @@
-package org.siny.app
+package org.siny.web.server.app
 
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
@@ -9,18 +9,15 @@ import org.elasticsearch.common.netty.channel.socket.nio.NioServerSocketChannelF
 import org.elasticsearch.common.netty.channel.{ChannelPipeline, ChannelPipelineFactory, Channels}
 import org.elasticsearch.common.netty.handler.codec.http.{HttpChunkAggregator, HttpRequestDecoder, HttpResponseEncoder}
 import org.elasticsearch.common.netty.handler.stream.ChunkedWriteHandler
-import org.siny.controller.{TabController, BookMarkController}
-import org.siny.controller.UserAction.{registerUser, userInfo, userLogin}
 import org.siny.web.server.handler.RestServerHandler
-import org.siny.web.server.rest.controller.RestController.registerHandler
 import org.slf4j.LoggerFactory
 
 /**
  * Created by xiachen on 4/17/15.
  */
-object Siny {
-  def main(args: Array[String]) {
-    initialize()
+trait Siny {
+  def initialize() {
+    this.registerPath()
 
     lazy val config = ConfigFactory.load()
     lazy val LOG = LoggerFactory.getLogger(getClass.getName)
@@ -51,16 +48,6 @@ object Siny {
     LOG.info("Server Started, IP: " + config.getString("http.interface") + ", Port: " + config.getInt("http.port"))
   }
 
-  def initialize(): Unit = {
-    registerHandler("POST", "/register.html", registerUser)
-    registerHandler("POST", "/login.html", userLogin)
-    registerHandler("GET", "/user.html", userInfo)
-
-    registerHandler("GET", "/bookmark", BookMarkController.getBookMarks)
-    registerHandler("POST", "/bookmark", BookMarkController.postBookMark)
-    registerHandler("DELETE", "/bookmark", BookMarkController.deleteBookMark)
-
-    registerHandler("POST", "/tab", TabController.postBookMark)
-  }
+  def registerPath(): Unit = ???
 }
 
