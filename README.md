@@ -1,7 +1,7 @@
 # Siny
 The ***Siny*** web server is written by ***Scala***.
 
-#install
+#Install
 
 ```
 libraryDependencies ++= {
@@ -12,6 +12,8 @@ libraryDependencies ++= {
 ```
 
 #Configuration
+
+config file default is `application.conf`.
 
 ##Configure web root
 

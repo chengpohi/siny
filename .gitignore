@@ -24,3 +24,4 @@ www/public/.sass-cache/
 project/target/*
 lib/*
 release/*
+project/*
