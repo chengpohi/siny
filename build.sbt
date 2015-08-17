@@ -1,3 +1,5 @@
+organization := "org.siny.web"
+
 name := "siny"
 
 version := "1.0"

@@ -1,8 +1,7 @@
 package org.siny.file
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.scalatest.FlatSpec
+import org.siny.web.file.FileUtils
 
 /**
  * Created by xiachen on 4/19/15.
