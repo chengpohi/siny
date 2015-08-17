@@ -8,15 +8,15 @@ import org.siny.web.file.FileUtils
  */
 class FileUtilsTest extends FlatSpec {
   "file util" should "get File" in {
-    assert(FileUtils.getFile("/index.html").exists)
+    assert(FileUtils.getWebFile("/index.html").exists)
   }
 
   "file util" should "append default html" in {
-    assert(FileUtils.getFile("/").exists)
-    assert(FileUtils.getFile("/").getPath.endsWith("index.html"))
+    assert(FileUtils.getWebFile("/").exists)
+    assert(FileUtils.getWebFile("/").getPath.endsWith("index.html"))
   }
 
   "file util" should "get File failed" in {
-    assert(!FileUtils.getFile("/test").exists)
+    assert(!FileUtils.getWebFile("/test").exists)
   }
 }

@@ -12,7 +12,7 @@ object FileUtils {
   lazy val config = ConfigFactory.load()
   lazy val ROOT_DIRECTORY = config.getString("www.root")
 
-  def getFile(uri: String): File = {
+  def getWebFile(uri: String): File = {
     val file = Paths.get(ROOT_DIRECTORY + "/" + uri).toFile
     file.isDirectory match {
       case true => new File(ROOT_DIRECTORY + "/" + uri + "/index.html")

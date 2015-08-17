@@ -32,7 +32,7 @@ object ResponseWriter {
   }
 
   def writeFile(channel: Channel, uri: String, httpSession: HttpSession): Unit = {
-    val file = getFile(uri)
+    val file = getWebFile(uri)
     file.exists match {
       case true => writeFile(channel, file, OK)
       case false => writeBuffer(channel, (uri + ":" + " 404 Not Found").getBytes, NOT_FOUND)
