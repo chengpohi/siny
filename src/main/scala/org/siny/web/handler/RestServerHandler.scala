@@ -6,10 +6,9 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpMethod._
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
 import org.siny.web.cache.LoginUserCache
-import org.siny.web.response.ResponseWriter
+import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
 import org.siny.web.rest.controller.RestController
-import ResponseWriter.{writeBuffer, writeFile}
-import RestController.{deleteActions, getActions, postActions, putActions}
+import org.siny.web.rest.controller.RestController.{deleteActions, getActions, postActions, putActions}
 import org.siny.web.session.HttpSession
 import org.slf4j.LoggerFactory
 
@@ -41,10 +40,10 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
     val httpSession = HttpSession(user, httpRequest)
 
     f match {
-      case null => {
+      case null =>
         writeFile(ctx.getChannel, uri, httpSession)
-      }
-      case _ => writeBuffer(ctx.getChannel, f(httpSession))
+      case _ =>
+        writeBuffer(ctx.getChannel, f(httpSession))
     }
   }
 
