@@ -2,7 +2,7 @@ organization := "org.siny.web"
 
 name := "siny"
 
-version := "1.0"
+version := "1.1"
 
 scalaVersion := "2.11.3"
 
