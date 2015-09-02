@@ -7,6 +7,7 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
 import org.elasticsearch.common.netty.util.CharsetUtil
 import org.siny.web.cache.LoginUserCache
+import org.siny.web.response.HttpResponse
 import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
 import org.siny.web.rest.controller.RestController._
 import org.siny.web.session.HttpSession
@@ -46,19 +47,21 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
       case null =>
         writeFile(ctx.getChannel, uri, httpSession)
       case _ =>
-        httpRequest.getMethod match {
-          case GET =>
-            writeBuffer(ctx.getChannel, f(httpSession))
-          case POST =>
-            val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
-            writeBuffer(ctx.getChannel, f(parse(rawData).extract))
-          case PUT =>
-            writeBuffer(ctx.getChannel, f(httpSession))
-          case DELETE =>
-            writeBuffer(ctx.getChannel, f(httpSession))
-        }
-
+        val httpResponse: HttpResponse = executehandler(f, httpSession)
+        writeBuffer(ctx.getChannel, httpResponse)
     }
+  }
+
+  def executehandler(f: DealerType, httpSession: HttpSession): HttpResponse = httpSession.httpRequest.getMethod match {
+    case GET =>
+      f(httpSession)
+    case POST =>
+      val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
+      f(parse(rawData).extract)
+    case PUT =>
+      f(httpSession)
+    case DELETE =>
+      f(httpSession)
   }
 
   def visitHandler(ctx: ChannelHandlerContext, httpRequest: HttpRequest): User = {
