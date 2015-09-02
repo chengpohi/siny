@@ -2,15 +2,18 @@ package org.siny.web.handler
 
 import com.secer.elastic.model.User
 import org.elasticsearch.common.netty.channel._
-import org.elasticsearch.common.netty.handler.codec.http.HttpMethod._
+import org.elasticsearch.common.netty.handler.codec.http.HttpMethod.{DELETE, GET, POST, PUT}
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
+import org.elasticsearch.common.netty.util.CharsetUtil
 import org.siny.web.cache.LoginUserCache
 import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
-import org.siny.web.rest.controller.RestController
-import org.siny.web.rest.controller.RestController.{deleteActions, getActions, postActions, putActions}
+import org.siny.web.rest.controller.RestController._
 import org.siny.web.session.HttpSession
 import org.slf4j.LoggerFactory
+
+import org.json4s._
+import org.json4s.native.JsonMethods._
 
 /**
  * Rest Server Handler to deal Http Request
@@ -29,7 +32,7 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
     val uri: String = httpRequest.getUri
 
     LOG.info("IP: " + e.getRemoteAddress + " VISIT URL: " + uri + " Method:" + httpRequest.getMethod)
-    val f: RestController.DealerType = httpRequest.getMethod match {
+    val f: DealerType = httpRequest.getMethod match {
       case GET => getActions.getOrElse(uri, null)
       case POST => postActions.getOrElse(uri, null)
       case PUT => putActions.getOrElse(uri, null)
@@ -43,7 +46,18 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
       case null =>
         writeFile(ctx.getChannel, uri, httpSession)
       case _ =>
-        writeBuffer(ctx.getChannel, f(httpSession))
+        httpRequest.getMethod match {
+          case GET =>
+            writeBuffer(ctx.getChannel, f(httpSession))
+          case POST =>
+            val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
+            writeBuffer(ctx.getChannel, f(parse(rawData).extract))
+          case PUT =>
+            writeBuffer(ctx.getChannel, f(httpSession))
+          case DELETE =>
+            writeBuffer(ctx.getChannel, f(httpSession))
+        }
+
     }
   }
 
