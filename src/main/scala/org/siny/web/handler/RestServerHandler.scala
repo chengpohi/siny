@@ -6,15 +6,14 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpMethod.{DELETE, GET
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
 import org.elasticsearch.common.netty.util.CharsetUtil
+import org.json4s._
+import org.json4s.native.JsonMethods._
 import org.siny.web.cache.LoginUserCache
 import org.siny.web.response.HttpResponse
 import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
 import org.siny.web.rest.controller.RestController._
 import org.siny.web.session.HttpSession
 import org.slf4j.LoggerFactory
-
-import org.json4s._
-import org.json4s.native.JsonMethods._
 
 /**
  * Rest Server Handler to deal Http Request
