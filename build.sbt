@@ -43,3 +43,25 @@ publishTo := {
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
+
+pomExtra := (
+  <url>https://github.com/chengpohi/siny</url>
+  <licenses>
+    <license>
+      <name>BSD-style</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>git@github.com:chengpohi/siny.git</url>
+    <connection>scm:git:git@github.com:chengpohi/siny.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>chengpohi</id>
+      <name>chengpohi</name>
+      <url>https://github.com/chengpohi/siny</url>
+    </developer>
+  </developers>
+)
