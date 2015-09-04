@@ -6,8 +6,11 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpMethod.{DELETE, GET
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
 import org.elasticsearch.common.netty.util.CharsetUtil
+
 import org.json4s._
+import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods._
+
 import org.siny.web.cache.LoginUserCache
 import org.siny.web.response.HttpResponse
 import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
@@ -21,7 +24,7 @@ import org.slf4j.LoggerFactory
  */
 class RestServerHandler extends SimpleChannelUpstreamHandler {
   lazy val LOG = LoggerFactory.getLogger(getClass.getName)
-
+  implicit val formats = DefaultFormats
 
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = {
     val httpRequest = e.getMessage.asInstanceOf[HttpRequest]

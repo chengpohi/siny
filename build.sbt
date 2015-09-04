@@ -4,6 +4,8 @@ name := "siny"
 
 version := "1.1"
 
+publishMavenStyle := true
+
 scalaVersion := "2.11.3"
 
 unmanagedBase := baseDirectory.value / "lib"
@@ -27,3 +29,17 @@ libraryDependencies ++= {
 
 resolvers ++= Seq(
 )
+
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
