@@ -1,4 +1,4 @@
-organization := "org.siny.web"
+organization := "com.github.chengpohi"
 
 name := "siny"
 
