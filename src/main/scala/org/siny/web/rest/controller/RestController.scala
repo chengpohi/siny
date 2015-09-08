@@ -14,17 +14,17 @@ object RestController {
 
   type DealerType = Object => HttpResponse
 
-  var getActions = scala.collection.mutable.Map[String, DealerType]()
-  var postActions = scala.collection.mutable.Map[String, DealerType]()
-  var putActions = scala.collection.mutable.Map[String, DealerType]()
-  var deleteActions = scala.collection.mutable.Map[String, DealerType]()
+  var getActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
+  var postActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
+  var putActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
+  var deleteActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
 
-  def registerHandler[A](method: String, path: String, f: A => HttpResponse): Unit = {
+  def registerHandler[A](method: String, path: String, f: A => HttpResponse)(implicit mf: Manifest[A]): Unit = {
     method match {
-      case GET => getActions += path -> f.asInstanceOf[DealerType]
-      case PUT => putActions += path -> f.asInstanceOf[DealerType]
-      case DELETE => deleteActions += path -> f.asInstanceOf[DealerType]
-      case POST => postActions += path -> f.asInstanceOf[DealerType]
+      case GET => getActions += path ->(f.asInstanceOf[DealerType], mf)
+      case PUT => putActions += path ->(f.asInstanceOf[DealerType], mf)
+      case DELETE => deleteActions += path ->(f.asInstanceOf[DealerType], mf)
+      case POST => postActions += path ->(f.asInstanceOf[DealerType], mf)
       case _ =>
     }
   }

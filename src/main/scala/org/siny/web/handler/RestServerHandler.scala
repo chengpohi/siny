@@ -32,7 +32,7 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
     val uri: String = httpRequest.getUri
 
     LOG.info("IP: " + e.getRemoteAddress + " VISIT URL: " + uri + " Method:" + httpRequest.getMethod)
-    val f: DealerType = httpRequest.getMethod match {
+    val f: (DealerType, Manifest[_]) = httpRequest.getMethod match {
       case GET => getActions.getOrElse(uri, null)
       case POST => postActions.getOrElse(uri, null)
       case PUT => putActions.getOrElse(uri, null)
@@ -50,20 +50,25 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
     }
   }
 
-  def executehandler(f: DealerType, httpSession: HttpSession): HttpResponse = {
+  def executehandler(f: (DealerType, Manifest[_]), httpSession: HttpSession): HttpResponse = {
     httpSession.httpRequest.getMethod match {
       case GET =>
-        def getAction[A] = f.asInstanceOf[A => HttpResponse]
+        def getAction[A] = f._1.asInstanceOf[A => HttpResponse]
+
         getAction(httpSession)
       case POST =>
+        implicit val mf = f._2
+
         val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
-        def postAction[A] = f.asInstanceOf[A => HttpResponse]
+        def postAction[A] = f._1.asInstanceOf[A => HttpResponse]
+
         postAction(parse(rawData).extract)
       case PUT =>
-        def putAction[A] = f.asInstanceOf[A => HttpResponse]
+        def putAction[A] = f._1.asInstanceOf[A => HttpResponse]
+
         putAction(httpSession)
       case DELETE =>
-        def deleteAction[A] = f.asInstanceOf[A => HttpResponse]
+        def deleteAction[A] = f._1.asInstanceOf[A => HttpResponse]
         deleteAction(httpSession)
     }
   }
