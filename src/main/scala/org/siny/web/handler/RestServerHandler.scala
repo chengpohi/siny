@@ -6,11 +6,8 @@ import org.elasticsearch.common.netty.handler.codec.http.HttpMethod.{DELETE, GET
 import org.elasticsearch.common.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import org.elasticsearch.common.netty.handler.codec.http.{HttpHeaders, HttpRequest}
 import org.elasticsearch.common.netty.util.CharsetUtil
-
 import org.json4s._
-import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods._
-
 import org.siny.web.cache.LoginUserCache
 import org.siny.web.response.HttpResponse
 import org.siny.web.response.ResponseWriter.{writeBuffer, writeFile}
@@ -40,7 +37,6 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
       case POST => postActions.getOrElse(uri, null)
       case PUT => putActions.getOrElse(uri, null)
       case DELETE => deleteActions.getOrElse(uri, null)
-      case _ => null
     }
 
     val httpSession = HttpSession(user, httpRequest)
@@ -54,16 +50,22 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
     }
   }
 
-  def executehandler(f: DealerType, httpSession: HttpSession): HttpResponse = httpSession.httpRequest.getMethod match {
-    case GET =>
-      f(httpSession)
-    case POST =>
-      val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
-      f(parse(rawData).extract)
-    case PUT =>
-      f(httpSession)
-    case DELETE =>
-      f(httpSession)
+  def executehandler(f: DealerType, httpSession: HttpSession): HttpResponse = {
+    httpSession.httpRequest.getMethod match {
+      case GET =>
+        def getAction[A] = f.asInstanceOf[A => HttpResponse]
+        getAction(httpSession)
+      case POST =>
+        val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
+        def postAction[A] = f.asInstanceOf[A => HttpResponse]
+        postAction(parse(rawData).extract)
+      case PUT =>
+        def putAction[A] = f.asInstanceOf[A => HttpResponse]
+        putAction(httpSession)
+      case DELETE =>
+        def deleteAction[A] = f.asInstanceOf[A => HttpResponse]
+        deleteAction(httpSession)
+    }
   }
 
   def visitHandler(ctx: ChannelHandlerContext, httpRequest: HttpRequest): User = {

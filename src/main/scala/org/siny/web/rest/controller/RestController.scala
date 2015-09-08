@@ -12,19 +12,19 @@ object RestController {
   val PUT = "PUT"
   val DELETE = "DELETE"
 
-  type DealerType = (Any*) => HttpResponse
+  type DealerType = Object => HttpResponse
 
   var getActions = scala.collection.mutable.Map[String, DealerType]()
   var postActions = scala.collection.mutable.Map[String, DealerType]()
   var putActions = scala.collection.mutable.Map[String, DealerType]()
   var deleteActions = scala.collection.mutable.Map[String, DealerType]()
 
-  def registerHandler(method: String, path: String, f: (Any*) => HttpResponse): Unit = {
+  def registerHandler[A](method: String, path: String, f: A => HttpResponse): Unit = {
     method match {
-      case GET => getActions += path -> f
-      case PUT => putActions += path -> f
-      case DELETE => deleteActions += path -> f
-      case POST => postActions += path -> f
+      case GET => getActions += path -> f.asInstanceOf[DealerType]
+      case PUT => putActions += path -> f.asInstanceOf[DealerType]
+      case DELETE => deleteActions += path -> f.asInstanceOf[DealerType]
+      case POST => postActions += path -> f.asInstanceOf[DealerType]
       case _ =>
     }
   }
