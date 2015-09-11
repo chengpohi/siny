@@ -39,4 +39,22 @@ class RestControllerTest extends FlatSpec {
     assert(httpResponse.content == u.name)
     testWithTypeErasure()
   }
+
+  "RestController " should "can inject functions by tuple parameters" in {
+    val u: User = User("chengpohi", Option("chengpohi@gmail.com"))
+
+    def t(user: (User, String)): HttpResponse = {
+      println("UserName: " + user._1.name)
+      println("String: " + user._2)
+      HttpResponse(user._1.name, HttpResponseStatus.ACCEPTED)
+    }
+
+    RestController.registerHandler("GET", "TEST_GET", t)
+
+    def getAction[A] = RestController.getActions.getOrElse("TEST_GET", null)._1.asInstanceOf[A => HttpResponse]
+    val httpResponse: HttpResponse = getAction((u, "Hello"))
+
+    assert(RestController.getActions.size == 1)
+    assert(httpResponse.content == u.name)
+  }
 }
