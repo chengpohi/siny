@@ -57,14 +57,20 @@ class RestServerHandler extends SimpleChannelUpstreamHandler {
 
         getAction(httpSession)
       case POST =>
-        implicit val mf = f._2
-
-        val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
-        def postAction[A] = f._1.asInstanceOf[A => HttpResponse]
 
         httpSession.user match {
-          case null => postAction(parse(rawData).extract)
-          case _ => postAction((httpSession.user, parse(rawData).extract))
+          case null => {
+            implicit val mf = f._2
+            val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
+            def postAction[A] = f._1.asInstanceOf[A => HttpResponse]
+            postAction(parse(rawData).extract)
+          }
+          case _ => {
+            implicit val mf = f._2
+            val rawData = httpSession.httpRequest.getContent.toString(CharsetUtil.UTF_8)
+            def postAction[A] = f._1.asInstanceOf[(HttpSession, A) => HttpResponse]
+            postAction(httpSession, parse(rawData).extract)
+          }
         }
 
       case PUT =>

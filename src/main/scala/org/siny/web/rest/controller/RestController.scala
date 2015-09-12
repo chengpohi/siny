@@ -1,6 +1,7 @@
 package org.siny.web.rest.controller
 
 import org.siny.web.response.HttpResponse
+import org.siny.web.session.HttpSession
 
 /**
  * RestController to register controller http request
@@ -18,6 +19,16 @@ object RestController {
   var postActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
   var putActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
   var deleteActions = scala.collection.mutable.Map[String, (DealerType, Manifest[_])]()
+
+  def registerHandlerWithHttpSession[A](method: String, path: String, f: (HttpSession, A) => HttpResponse)(implicit mf: Manifest[A]): Unit = {
+    method match {
+      case GET => getActions += path ->(f.asInstanceOf[DealerType], mf)
+      case PUT => putActions += path ->(f.asInstanceOf[DealerType], mf)
+      case DELETE => deleteActions += path ->(f.asInstanceOf[DealerType], mf)
+      case POST => postActions += path ->(f.asInstanceOf[DealerType], mf)
+      case _ =>
+    }
+  }
 
   def registerHandler[A](method: String, path: String, f: A => HttpResponse)(implicit mf: Manifest[A]): Unit = {
     method match {
